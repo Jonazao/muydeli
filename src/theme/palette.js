@@ -1,21 +1,15 @@
 import colors from './colors';
 
 const palette = {
-  background: {
-    default: colors.lightGray,
-    paper: colors.white,
-  },
+  mode: 'light',
   primary: {
     main: colors.primary,
-    contrastText: colors.white,
   },
   secondary: {
-    main: colors.black,
-    contrastText: colors.white,
+    main: colors.secondary,
   },
   success: {
     main: colors.success,
-    contrastText: colors.white,
   },
   error: {
     main: colors.error,
@@ -29,14 +23,13 @@ const palette = {
   divider: {
     main: colors.divider,
   },
-  black: {
-    main: colors.black,
+  common: {
+    black: colors.black,
+    white: colors.white,
   },
-  white: {
-    main: colors.white,
-  },
-  twitter: {
-    main: colors.twitter,
+  background: {
+    default: colors.background,
+    paper: colors.backgroundLight,
   },
 };
 

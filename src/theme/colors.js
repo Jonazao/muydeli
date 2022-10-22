@@ -7,7 +7,10 @@ const grays = {
 };
 
 const colors = {
-  primary: '#00aced',
+  background: '#b2ac9d',
+  backgroundLight: '#ece8db',
+  primary: '#5e402d',
+  secondary: '#6b603a',
   success: '#5cb85c',
   error: '#f44336',
   warning: '#ff9800',
