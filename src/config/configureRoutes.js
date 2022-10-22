@@ -4,8 +4,8 @@ export const LOGIN_URL = '/login';
 export const RTKQ_EXAMPLE_URL = '/rtkq-example';
 
 //Navigation Routes
-export const NAVIGATION_ITEM_ONE_URL = '/item1';
-export const NAVIGATION_ITEM_TWO_URL = '/item2';
-export const NAVIGATION_ITEM_THREE_URL = '/item3';
-export const NAVIGATION_ITEM_FOUR_URL = '/item4';
-export const NAVIGATION_ITEM_FIVE_URL = '/item5';
+export const NAVIGATION_HOME_URL = '/home';
+export const NAVIGATION_PLACES_URL = '/places';
+export const NAVIGATION_DISHES_URL = '/dishes';
+export const NAVIGATION_CRITERIA_URL = '/criteria';
+export const NAVIGATION_DINERS_URL = '/diners';
