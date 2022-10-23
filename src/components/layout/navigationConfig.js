@@ -1,9 +1,9 @@
 import {
-  NAVIGATION_ITEM_ONE_URL,
-  NAVIGATION_ITEM_TWO_URL,
-  NAVIGATION_ITEM_THREE_URL,
-  NAVIGATION_ITEM_FOUR_URL,
-  NAVIGATION_ITEM_FIVE_URL,
+  NAVIGATION_HOME_URL,
+  NAVIGATION_PLACES_URL,
+  NAVIGATION_DISHES_URL,
+  NAVIGATION_CRITERIA_URL,
+  NAVIGATION_DINERS_URL,
 } from '../../config/configureRoutes';
 
 import RestoreIcon from '@mui/icons-material/Restore';
@@ -12,34 +12,34 @@ import ArchiveIcon from '@mui/icons-material/Archive';
 
 const items = [
   {
-    label: 'Item 1',
+    label: 'Home',
     value: 1,
     icon: RestoreIcon,
-    url: NAVIGATION_ITEM_ONE_URL,
+    url: NAVIGATION_HOME_URL,
   },
   {
-    label: 'Item 2',
+    label: 'Places',
     value: 2,
     icon: FavoriteIcon,
-    url: NAVIGATION_ITEM_TWO_URL,
+    url: NAVIGATION_PLACES_URL,
   },
   {
-    label: 'Item 3',
+    label: 'Dishes',
     value: 3,
     icon: ArchiveIcon,
-    url: NAVIGATION_ITEM_THREE_URL,
+    url: NAVIGATION_DISHES_URL,
   },
   {
-    label: 'Item 4',
+    label: 'Criteria',
     value: 4,
     icon: ArchiveIcon,
-    url: NAVIGATION_ITEM_FOUR_URL,
+    url: NAVIGATION_CRITERIA_URL,
   },
   {
-    label: 'Item 5',
+    label: 'Diners',
     value: 5,
     icon: ArchiveIcon,
-    url: NAVIGATION_ITEM_FIVE_URL,
+    url: NAVIGATION_DINERS_URL,
   },
 ];
 
