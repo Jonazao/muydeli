@@ -3,33 +3,36 @@ import { getTagLists } from '../helpers/service-tag-list.helper';
 import { createApi } from '@reduxjs/toolkit/query/react';
 
 // Define a service using a base URL and expected endpoints
-const resourceName = 'Diners';
-const dinersTags = getTagLists(resourceName);
+const resourceName = 'diners';
+const dinerTags = getTagLists(resourceName);
 
 export const dinersApi = createApi({
+  reducerPath: `${resourceName}Api`,
   baseQuery: axiosBaseQuery(),
   tagTypes: [resourceName],
   endpoints: (build) => ({
     getDiners: build.query({
-      query: () => ({ url: 'diners', method: 'GET' }),
-      providesTags: (result) =>
-        result ? dinersTags.getPaginatedListTagList(result.map(({ id }) => id)) : dinersTags.getListTagList(),
+      query: () => ({ url: resourceName, method: 'GET' }),
+      providesTags: (response) => {
+        const { result } = response;
+        return result ? dinerTags.getPaginatedListTagList(result.map(({ id }) => id)) : dinerTags.getListTagList();
+      },
     }),
     addDiner: build.mutation({
       query: (body) => ({
-        url: `${resourceName.toLocaleLowerCase()}`,
+        url: resourceName,
         method: 'POST',
         body,
       }),
-      invalidatesTags: dinersTags.getListTagList(),
+      invalidatesTags: dinerTags.getListTagList(),
     }),
     getDiner: build.query({
-      query: (id) => `${resourceName.toLocaleLowerCase()}/${id}`,
-      providesTags: (result, error, id) => dinersTags.getOneTagList(),
+      query: (id) => ({ url: `${resourceName}/${id}`, method: 'GET' }),
+      providesTags: (result, error, id) => dinerTags.getOneTagList(),
     }),
     updateDiner: build.mutation({
       query: ({ id, ...patch }) => ({
-        url: `${resourceName.toLocaleLowerCase()}/${id}`,
+        url: `${resourceName}/${id}`,
         method: 'PUT',
         body: patch,
       }),
@@ -45,16 +48,16 @@ export const dinersApi = createApi({
           patchResult.undo();
         }
       },
-      invalidatesTags: (result, error, { id }) => dinersTags.getOneTagList(),
+      invalidatesTags: (result, error, { id }) => dinerTags.getOneTagList(),
     }),
     deleteDiner: build.mutation({
       query(id) {
         return {
-          url: `${resourceName.toLocaleLowerCase()}/${id}`,
+          url: `${resourceName}/${id}`,
           method: 'DELETE',
         };
       },
-      invalidatesTags: (result, error, id) => dinersTags.getOneTagList(),
+      invalidatesTags: (result, error, id) => dinerTags.getOneTagList(),
     }),
   }),
 });

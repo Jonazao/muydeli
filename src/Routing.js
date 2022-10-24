@@ -9,7 +9,11 @@ import Home from './pages/Home';
 import Places from './pages/Places';
 import Dishes from './pages/Dishes';
 import Criteria from './pages/Criteria';
+
+//Diners Section
 import Diners from './pages/Diners';
+import Diner from './pages/diner/Diner';
+
 import Login from './pages/Login';
 import PostExample from './pages/PostExample';
 import PageNotFound from './pages/PageNotFound';
@@ -41,7 +45,15 @@ export default function Routing() {
                 <Route path={NAVIGATION_PLACES_URL} element={<Places />} />
                 <Route path={NAVIGATION_DISHES_URL} element={<Dishes />} />
                 <Route path={NAVIGATION_CRITERIA_URL} element={<Criteria />} />
-                <Route path={NAVIGATION_DINERS_URL} element={<Diners />} />
+                <Route
+                  path={`${NAVIGATION_DINERS_URL}/*`}
+                  element={
+                    <Routes>
+                      <Route path="" element={<Diners />} />
+                      <Route path=":dinerId" element={<Diner />} />
+                    </Routes>
+                  }
+                ></Route>
                 <Route path="*" element={<Navigate to="/not-found" />} />
               </Routes>
               <BottomBarApp />
