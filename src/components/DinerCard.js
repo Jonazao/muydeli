@@ -1,8 +1,8 @@
 import React from 'react';
 
-import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
+
 import CardMedia from '@mui/material/CardMedia';
 import CardActionArea from '@mui/material/CardActionArea';
 
@@ -11,7 +11,7 @@ import DinerPersonal from './diner/DinerPersonal';
 import DinerSummary from './diner/DinerSummary';
 
 export default function DinerCard({ diner, onCardClick }) {
-  const { firstName } = diner;
+  const { firstName, title, info, contributions } = diner;
 
   const handleOnCardClick = () => {
     onCardClick('Clicked');
@@ -19,7 +19,35 @@ export default function DinerCard({ diner, onCardClick }) {
 
   const useCardActionArea = (Component) => {
     if (!onCardClick) return Component;
-    return <CardActionArea onClick={handleOnCardClick}>{Component}</CardActionArea>;
+    return (
+      <CardActionArea onClick={handleOnCardClick} sx={{ display: 'flex', alignItems: 'inherit' }}>
+        {Component}
+      </CardActionArea>
+    );
   };
-  return <Card>{useCardActionArea(<h1>{firstName}</h1>)}</Card>;
+  return (
+    <Card sx={{ display: 'flex' }}>
+      {useCardActionArea(
+        <>
+          <CardMedia
+            component="img"
+            sx={{ width: 151 }}
+            image="https://www.beerinstitute.org/wp-content/uploads/2016/11/placeholder-3x4.png"
+            alt="Diner's photo"
+          />
+          <Grid container direction="column" justifyContent="space-between" alignItems="flex-start" sx={{ pt: 2 }}>
+            <Grid item sx={{ pl: 2 }}>
+              <DinerPersonal user={{ firstName, title }} />
+            </Grid>
+            <Grid item sx={{ pl: 2 }}>
+              <DinerSummary summary={info.summary} />
+            </Grid>
+            <Grid item sx={{ pl: 1 }}>
+              <DinerActions contributions={contributions} />
+            </Grid>
+          </Grid>
+        </>,
+      )}
+    </Card>
+  );
 }

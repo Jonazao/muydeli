@@ -3,6 +3,7 @@ const diners = [
     id: 1,
     firstName: 'Jhonnatan',
     lastName: 'Guerrero',
+    title: 'Sr Software Engineer Tech Lead ',
     info: {
       summary: 'Coffee and asian food lover',
       description: 'I am a food enthusiast that love to know the cities by its gastronomy',
