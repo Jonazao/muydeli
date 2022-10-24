@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthServer } from './config/configureTemplate';
 import ProtectedRoute from './hocs/ProtectedRoute';
 
@@ -42,12 +42,13 @@ export default function Routing() {
                 <Route path={NAVIGATION_DISHES_URL} element={<Dishes />} />
                 <Route path={NAVIGATION_CRITERIA_URL} element={<Criteria />} />
                 <Route path={NAVIGATION_DINERS_URL} element={<Diners />} />
-                <Route path="*" element={<PageNotFound />} />
+                <Route path="*" element={<Navigate to="/not-found" />} />
               </Routes>
               <BottomBarApp />
             </ProtectedRoute>
           }
         />
+        <Route path="/not-found" element={<PageNotFound />} />
       </Routes>
     </>
   );
