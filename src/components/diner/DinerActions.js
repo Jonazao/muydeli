@@ -11,21 +11,21 @@ export default function DinerActions({ contributions }) {
   return (
     <Grid container spacing={2} alignItems="center">
       <Grid item>
-        <IconButton aria-label="places">
+        <IconButton aria-label="places" component="div">
           <Badge badgeContent={places} color="info">
             <PlaceIcon color="primary" />
           </Badge>
         </IconButton>
       </Grid>
       <Grid item>
-        <IconButton aria-label="reviews">
+        <IconButton aria-label="reviews" component="div">
           <Badge badgeContent={reviews} color="info">
             <RateReviewIcon color="primary" />
           </Badge>
         </IconButton>
       </Grid>
       <Grid item>
-        <IconButton aria-label="comments">
+        <IconButton aria-label="comments" component="div">
           <Badge badgeContent={comments} color="info">
             <CommentIcon color="primary" />
           </Badge>

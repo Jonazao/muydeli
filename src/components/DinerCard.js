@@ -11,10 +11,10 @@ import DinerPersonal from './diner/DinerPersonal';
 import DinerSummary from './diner/DinerSummary';
 
 export default function DinerCard({ diner, onCardClick }) {
-  const { firstName, title, info, contributions } = diner;
+  const { id, firstName, title, info, contributions } = diner;
 
   const handleOnCardClick = () => {
-    onCardClick('Clicked');
+    onCardClick(id);
   };
 
   const useCardActionArea = (Component) => {
@@ -36,13 +36,13 @@ export default function DinerCard({ diner, onCardClick }) {
             alt="Diner's photo"
           />
           <Grid container direction="column" justifyContent="space-between" alignItems="flex-start" sx={{ pt: 2 }}>
-            <Grid item sx={{ pl: 2 }}>
+            <Grid item sx={{ pl: 2, pr: 1 }}>
               <DinerPersonal user={{ firstName, title }} />
             </Grid>
-            <Grid item sx={{ pl: 2 }}>
+            <Grid item sx={{ pl: 2, pr: 1 }}>
               <DinerSummary summary={info.summary} />
             </Grid>
-            <Grid item sx={{ pl: 1 }}>
+            <Grid item sx={{ pl: 1, pr: 1 }}>
               <DinerActions contributions={contributions} />
             </Grid>
           </Grid>

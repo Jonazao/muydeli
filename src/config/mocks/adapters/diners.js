@@ -1,5 +1,5 @@
-import diners from '../../data/diners';
-import { extractIdPathParamFromUrl, createPaginationResponse } from '../../common/helpers';
+import diners from '../data/diners';
+import { extractIdPathParamFromUrl, createPaginationResponse } from '../common/helpers';
 
 const getDiners = (config) => {
   console.log('getDiners mock');
