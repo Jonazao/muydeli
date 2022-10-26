@@ -1,18 +1,31 @@
+import { faker } from '@faker-js/faker';
+const numberOfReviews = 27;
+
 const diners = [
   {
     id: 1,
-    firstName: 'Jhonnatan',
-    lastName: 'Guerrero',
-    title: 'Sr Software Engineer Tech Lead ',
+    photoUrl: faker.image.avatar(),
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    title: faker.name.jobTitle(),
     info: {
-      summary: 'Coffee and asian food lover',
-      description: 'I am a food enthusiast that love to know the cities by its gastronomy',
+      summary: faker.lorem.lines(),
+      description: faker.lorem.paragraphs(),
     },
     contributions: {
       places: 3,
-      reviews: 7,
+      reviews: numberOfReviews,
       comments: 25,
     },
+    reviews: Array.from({ length: numberOfReviews }).map(() => {
+      return {
+        id: faker.datatype.uuid(),
+        photoUrl: faker.image.food(293, 293),
+        dish: {
+          name: faker.random.words(3),
+        },
+      };
+    }),
   },
 ];
 

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 
 import { NAVIGATION_DINERS_URL } from '../config/configureRoutes';
-import { BIG_CARD_SIZE } from '../config/components.constants';
+import { SMALL_CARD_SIZE } from '../config/components.constants';
 
 import Page from '../components/layout/Page';
 import DinerCard from '../components/DinerCard';
@@ -25,7 +25,7 @@ export default function Diners() {
   return (
     <Page>
       <Grid container flexDirection="row" justifyContent="center" spacing={2}>
-        <Grid item sx={{ width: '100%', maxWidth: BIG_CARD_SIZE }}>
+        <Grid item sx={{ width: '100%', maxWidth: SMALL_CARD_SIZE }}>
           <Grid container>
             {data.result.map((diner) => {
               return (

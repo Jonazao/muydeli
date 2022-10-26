@@ -11,7 +11,7 @@ import DinerPersonal from './diner/DinerPersonal';
 import DinerSummary from './diner/DinerSummary';
 
 export default function DinerCard({ diner, onCardClick }) {
-  const { id, firstName, title, info, contributions } = diner;
+  const { id, photoUrl, firstName, lastName, title, info, contributions } = diner;
 
   const handleOnCardClick = () => {
     onCardClick(id);
@@ -29,15 +29,10 @@ export default function DinerCard({ diner, onCardClick }) {
     <Card sx={{ display: 'flex' }}>
       {useCardActionArea(
         <>
-          <CardMedia
-            component="img"
-            sx={{ width: 151 }}
-            image="https://www.beerinstitute.org/wp-content/uploads/2016/11/placeholder-3x4.png"
-            alt="Diner's photo"
-          />
+          <CardMedia component="img" sx={{ width: 150, height: 200 }} image={photoUrl} alt="Diner's photo" />
           <Grid container direction="column" justifyContent="space-between" alignItems="flex-start" sx={{ pt: 2 }}>
             <Grid item sx={{ pl: 2, pr: 1 }}>
-              <DinerPersonal user={{ firstName, title }} />
+              <DinerPersonal user={{ firstName, lastName, title }} />
             </Grid>
             <Grid item sx={{ pl: 2, pr: 1 }}>
               <DinerSummary summary={info.summary} />
