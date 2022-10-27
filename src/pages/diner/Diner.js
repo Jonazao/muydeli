@@ -8,17 +8,24 @@ import { BIG_CARD_SIZE } from '../../config/components.constants';
 import Page from '../../components/layout/Page';
 import DinerCard from '../../components/DinerCard';
 
-import { useGetDinerQuery } from '../../services/diners';
+import { useGetDinerQuery, useGetDinerReviewsQuery } from '../../services/diners';
 
 export default function Diner() {
   const params = useParams();
   const { dinerId } = params;
+
   const getDinerResponse = useGetDinerQuery(dinerId);
-  const { isLoading, data: diner } = getDinerResponse;
-  if (isLoading) {
+  const { isLoading: isDinerLoading, data: diner } = getDinerResponse;
+
+  const getDinerReviewsResponse = useGetDinerReviewsQuery(dinerId);
+  const { isLoading: isDinerReviewsLoading, data: dinerReviewsResponse } = getDinerReviewsResponse;
+
+  if (isDinerLoading || isDinerReviewsLoading) {
     return <h3>Loading...</h3>;
   }
-  const { reviews } = diner;
+
+  const { result: dinerReviews } = dinerReviewsResponse;
+
   return (
     <Page>
       <Grid container flexDirection="column" alignItems="center" spacing={2}>
@@ -30,7 +37,7 @@ export default function Diner() {
         </Grid>
         <Grid item sx={{ width: '100%', maxWidth: BIG_CARD_SIZE }}>
           <Grid container>
-            {reviews.map((review) => (
+            {dinerReviews.map((review) => (
               <Grid item key={review.id} sm={4}>
                 <img
                   src={`${review.photoUrl}?w=164&h=164&fit=crop&auto=format`}

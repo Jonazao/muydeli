@@ -1,7 +1,16 @@
 import PageResult from './PageResult';
 
-export const extractIdPathParamFromUrl = (config) => {
-  return config.url.split('/').pop();
+export const extractIdPathParamFromUrl = (config, params) => {
+  const splitedUrl = config.url.split('/');
+  let pathParms = {};
+  params.forEach((param) => {
+    const paramIndex = splitedUrl.findIndex((urlFragment) => urlFragment === param);
+    const paramValue = splitedUrl[paramIndex + 1];
+    if (paramValue) {
+      pathParms[param] = paramValue;
+    }
+  });
+  return pathParms;
 };
 
 export const createPaginationResponse = (data, filters) => {

@@ -59,6 +59,13 @@ export const dinersApi = createApi({
       },
       invalidatesTags: (result, error, id) => dinerTags.getOneTagList(),
     }),
+    getDinerReviews: build.query({
+      query: (id) => ({ url: `${resourceName}/${id}/reviews`, method: 'GET' }),
+      providesTags: (response) => {
+        const { result } = response;
+        return result ? dinerTags.getPaginatedListTagList(result.map(({ id }) => id)) : dinerTags.getListTagList();
+      },
+    }),
   }),
 });
 
@@ -68,4 +75,5 @@ export const {
   useAddDinerMutation,
   useUpdateDinerMutation,
   useDeleteDinerMutation,
+  useGetDinerReviewsQuery,
 } = dinersApi;
