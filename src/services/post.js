@@ -6,6 +6,7 @@ import { createApi } from '@reduxjs/toolkit/query/react';
 const postTags = getTagLists('Post');
 
 export const postApi = createApi({
+  reducerPath: 'postsApi',
   baseQuery: axiosBaseQuery(),
   tagTypes: ['Post'],
   endpoints: (build) => ({
