@@ -1,9 +1,9 @@
 import { faker } from '@faker-js/faker';
 const numberOfReviews = 27;
 
-const diners = [
-  {
-    id: 1,
+const diners = Array.from({ length: 4 }).map((item, index) => {
+  return {
+    id: index,
     photoUrl: faker.image.avatar(),
     firstName: faker.name.firstName(),
     lastName: faker.name.lastName(),
@@ -26,7 +26,7 @@ const diners = [
         },
       };
     }),
-  },
-];
+  };
+});
 
 export default diners;

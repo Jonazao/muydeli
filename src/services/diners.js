@@ -8,6 +8,7 @@ const dinerTags = getTagLists(resourceName);
 
 export const dinersApi = createApi({
   reducerPath: `${resourceName}Api`,
+  keepUnusedDataFor: 5,
   baseQuery: axiosBaseQuery(),
   tagTypes: [resourceName],
   endpoints: (build) => ({
