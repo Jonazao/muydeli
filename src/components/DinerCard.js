@@ -26,18 +26,18 @@ export default function DinerCard({ diner, onCardClick }) {
     );
   };
   return (
-    <Card sx={{ display: 'flex' }}>
+    <Card sx={{ display: 'flex', height: 200 }}>
       {useCardActionArea(
         <>
           <CardMedia component="img" sx={{ width: 150, height: 200 }} image={photoUrl} alt="Diner's photo" />
-          <Grid container direction="column" justifyContent="space-between" alignItems="flex-start" sx={{ pt: 2 }}>
+          <Grid container direction="column" justifyContent="flex-start" alignItems="flex-start" sx={{ pt: 2 }}>
             <Grid item sx={{ pl: 2, pr: 1 }}>
               <DinerPersonal user={{ firstName, lastName, title }} />
             </Grid>
             <Grid item sx={{ pl: 2, pr: 1 }}>
               <DinerSummary summary={info.summary} />
             </Grid>
-            <Grid item sx={{ pl: 1, pr: 1 }}>
+            <Grid item sx={{ pl: 1, pr: 1, mt: 'auto' }}>
               <DinerActions contributions={contributions} />
             </Grid>
           </Grid>

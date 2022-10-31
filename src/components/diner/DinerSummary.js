@@ -3,7 +3,15 @@ import Typography from '@mui/material/Typography';
 
 export default function DinerSummary({ summary }) {
   return (
-    <Typography variant="body1" component="div">
+    <Typography
+      sx={{
+        display: '-webkit-box',
+        overflow: 'hidden',
+        WebkitBoxOrient: 'vertical',
+        WebkitLineClamp: 1,
+      }}
+      variant="body1"
+    >
       {summary}
     </Typography>
   );

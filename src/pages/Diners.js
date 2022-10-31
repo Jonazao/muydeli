@@ -26,7 +26,7 @@ export default function Diners() {
     <Page>
       <Grid container flexDirection="row" justifyContent="center" spacing={2}>
         <Grid item sx={{ width: '100%', maxWidth: SMALL_CARD_SIZE }}>
-          <Grid container>
+          <Grid container spacing={2}>
             {data.result.map((diner) => {
               return (
                 <Grid key={diner.id} item sx={{ width: '100%' }}>
