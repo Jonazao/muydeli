@@ -1,18 +1,16 @@
 import React from 'react';
 import CardHeader from '@mui/material/CardHeader';
 import { Avatar } from '@mui/material';
-import { red } from '@mui/material/colors';
-export default function ReviewPersonal() {
+import stringToAvatar from '../../helpers/string-to-avatar';
+export default function ReviewPersonal({reviewDate,reviewer}) {
   return (
     <>
      <CardHeader
         avatar={
-          <Avatar sx={{ bgcolor: red[500] }} aria-label="">
-            R
-          </Avatar>
+          <Avatar {...stringToAvatar(`${reviewer.firstName} ${reviewer.lastName}`)}/>
         }
-        action={'Review Date'}
-        title="Nombre del usuario"
+        action={new Date((reviewDate)).toDateString()}
+        title={`${reviewer.firstName} ${reviewer.lastName}` }
       />
     </>
   );

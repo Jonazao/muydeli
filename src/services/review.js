@@ -2,7 +2,7 @@ import { createApi } from "@reduxjs/toolkit/dist/query/react";
 import { axiosBaseQuery } from "../apis/gateway";
 import { getTagLists } from "../helpers/service-tag-list.helper";
 
-const resourceName = 'review';
+const resourceName = 'home';
 const reviewTags= getTagLists(resourceName);
 
 export const reviewAPI=createApi({

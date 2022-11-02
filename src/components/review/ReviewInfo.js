@@ -2,19 +2,19 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import { CardContent, Rating } from '@mui/material';
 import ReviewRating from './ReviewRating';
-export default function ReviewInfo() {
+export default function ReviewInfo({dish, restaurantName, finalScore}) {
   return (
     <CardContent>
      <Typography variant="h5">
-        Nombre del platillo 
+       {dish.name}
      </Typography>
      <Typography variant="subtitle1" color="text.secondary">
-        Tipo de platillo    
+       {dish.type}  
      </Typography>
      <Typography variant="subtitle1" color="text.secondary">
-        Restaurante del platillo 
+        {restaurantName}
      </Typography>
-     <ReviewRating text={'Total Score'} variant={'h6'}/>
+     <ReviewRating score={finalScore} text={'Total Score'} variant={'h6'}/>
     </CardContent>
   );
 }
