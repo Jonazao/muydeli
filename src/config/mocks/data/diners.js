@@ -20,7 +20,7 @@ const diners = Array.from({ length: 4 }).map((item, index) => {
     reviews: Array.from({ length: numberOfReviews }).map(() => {
       return {
         id: faker.datatype.uuid(),
-        photoUrl: faker.image.food(293, 293),
+        photoUrl: faker.image.food(650, 293),
         dish: {
           name: faker.random.words(3),
         },

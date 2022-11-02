@@ -5,6 +5,7 @@ import Divider from '@mui/material/Divider';
 
 import { BIG_CARD_SIZE } from '../../config/components.constants';
 
+import ImageContainer from '../../components/commons/images/ImageContainer';
 import Page from '../../components/layout/Page';
 import DinerCard from '../../components/DinerCard';
 
@@ -36,16 +37,21 @@ export default function Diner() {
           <Divider variant="middle" />
         </Grid>
         <Grid item sx={{ width: '100%', maxWidth: BIG_CARD_SIZE }}>
-          <Grid container>
+          <Grid container justifyContent="center" alignItems="center" sx={{ width: '100%' }}>
             {dinerReviews.map((review) => (
-              <Grid item key={review.id} sm={4}>
-                <img
-                  src={`${review.photoUrl}?w=164&h=164&fit=crop&auto=format`}
-                  srcSet={`${review.photoUrl}?w=164&h=164&fit=crop&auto=format&dpr=2 2x`}
-                  alt={review.dish.name}
-                  loading="lazy"
-                />
-              </Grid>
+              <ImageContainer
+                item
+                imageUrl={review.photoUrl}
+                aspectRatio="oneOnOne"
+                key={review.id}
+                xs={4}
+                imageProps={{
+                  sx: {
+                    margin: 1,
+                  },
+                }}
+                component={Grid}
+              />
             ))}
           </Grid>
         </Grid>
