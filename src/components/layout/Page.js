@@ -14,7 +14,7 @@ export default function Page({ children, title }) {
       component="main"
     >
       <Container maxWidth="xl" component="section">
-        <Grid container flexDirection="column" alignItems="center">
+        <Grid container flexDirection="column" alignItems="center" spacing={1}>
           {title && (
             <Grid item>
               <Typography component="div" variant="h4">
