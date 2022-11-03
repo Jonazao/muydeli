@@ -17,8 +17,8 @@ export default function Home() {
     <Page>
       <Grid
         container
-        flexDirection='row'
-        justifyContent='center'
+        flexDirection="row"
+        justifyContent="center"
         spacing={2}
       >
         <Grid
@@ -28,12 +28,13 @@ export default function Home() {
           <Grid
             container
             spacing={2}
-            flexDirection='column'
+            flexDirection="column"
           >
             {data.result.map((review) => {
               return (
                 <Grid
                   item
+                  key={review.id}
                   sx={{ width: '100%' }}
                 >
                   <ReviewCard review={review} />
