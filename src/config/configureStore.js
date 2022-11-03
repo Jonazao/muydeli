@@ -7,7 +7,7 @@ import authReducer from '../features/auth/authSlice';
 //Services
 import { postApi } from '../services/post';
 import { dinersApi } from '../services/diners';
-import { reviewAPI } from '../services/review';
+import { reviewApi } from '../services/review';
 
 const auth = useAuthServer ? authReducer : null;
 
@@ -17,8 +17,11 @@ export const store = configureStore({
     auth,
     [postApi.reducerPath]: postApi.reducer,
     [dinersApi.reducerPath]: dinersApi.reducer,
-    [reviewAPI.reducerPath]:reviewAPI.reducer
+    [reviewApi.reducerPath]: reviewApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(postApi.middleware).concat(dinersApi.middleware),
+    getDefaultMiddleware()
+      .concat(postApi.middleware)
+      .concat(dinersApi.middleware)
+      .concat(reviewApi.middleware),
 });
