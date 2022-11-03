@@ -1,9 +1,13 @@
+import labelsCriteria from './labels';
+
+const { satietyLevelLabel, garnishesLabel } = labelsCriteria;
 const satietyLevel = {
-  title: 'Satiety Level',
+  title: satietyLevelLabel,
   description:
     'The degree at which food gives a human the sense of food gratification, how it satisfy the feelings of hunger',
   examples: {
-    excellent: 'You do not need anything else, this is just the perfect quantity',
+    excellent:
+      'You do not need anything else, this is just the perfect quantity',
     exceeds: 'The price is on the average, but the quantity of food was higher',
     expected: 'It matches the average, you expected nothing more',
     belowAverage: 'The portion was to small for the given dish',
@@ -12,7 +16,7 @@ const satietyLevel = {
 };
 
 const garnishes = {
-  title: 'Garnishes',
+  title: garnishesLabel,
   description:
     'What is your dish accompanied with, what and how many options does it offer and how is their quality',
   examples: {
