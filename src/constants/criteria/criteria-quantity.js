@@ -1,6 +1,4 @@
-import labelsCriteria from './labels';
-
-const { satietyLevelLabel, garnishesLabel } = labelsCriteria;
+import { satietyLevelLabel, garnishesLabel } from './labels';
 const satietyLevel = {
   title: satietyLevelLabel,
   description:

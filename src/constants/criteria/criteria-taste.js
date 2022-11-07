@@ -1,6 +1,4 @@
-import labelsCriteria from './labels';
-
-const { expectationsLabel, flavorLabel } = labelsCriteria;
+import { expectationsLabel, flavorLabel } from './labels';
 const expectation = {
   title: expectationsLabel,
   description: 'Based on the essence of the dish what is delivered',

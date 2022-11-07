@@ -2,20 +2,20 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import { CardContent } from '@mui/material';
 import ReviewRating from './ReviewRating';
-import labelsCriteria from '../../constants/criteria/labels';
+import {
+  firstImpressionLabel,
+  platingLabel,
+  satietyLevelLabel,
+  garnishesLabel,
+  expectationsLabel,
+  flavorLabel,
+} from '../../constants/criteria/labels';
 export default function ReviewScores({ scores }) {
   const { taste, presentation, quantity } = scores;
   const { expectations, flavor } = taste;
   const { firstImpression, plating } = presentation;
   const { satietyLevel, garnishes } = quantity;
-  const {
-    firstImpressionLabel,
-    platingLabel,
-    satietyLevelLabel,
-    garnishesLabel,
-    expectationsLabel,
-    flavorLabel,
-  } = labelsCriteria;
+
   const variantSubtitleLabel = 'subtitle1';
   return (
     <CardContent>

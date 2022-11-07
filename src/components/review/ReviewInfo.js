@@ -2,9 +2,8 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import { CardContent } from '@mui/material';
 import ReviewRating from './ReviewRating';
-import labelsCriteria from '../../constants/criteria/labels';
+import { finalScoreLabel } from '../../constants/criteria/labels';
 export default function ReviewInfo({ dish, restaurantName, finalScore }) {
-  const { finalScoreLabel } = labelsCriteria;
   const { name, type } = dish;
   return (
     <CardContent>

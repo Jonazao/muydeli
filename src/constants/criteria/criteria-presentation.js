@@ -1,6 +1,5 @@
-import labelsCriteria from './labels';
+import { firstImpressionLabel, platingLabel } from './labels';
 
-const { firstImpressionLabel, platingLabel } = labelsCriteria;
 const firstImpression = {
   title: firstImpressionLabel,
   description: 'How you feel when you got your dish serve',
