@@ -32,7 +32,8 @@ export default function ReviewCard({ review }) {
 
       <CardActions disableSpacing>
         <Rotate
-          expand={expanded}
+          isRotated={expanded}
+          rotationDegrees={180}
           component={IconButton}
           onClick={handleExpandClick}
           aria-expanded={expanded}
