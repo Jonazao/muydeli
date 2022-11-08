@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { styled } from '@mui/material/styles';
+
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardActions from '@mui/material/CardActions';
@@ -11,21 +11,10 @@ import ReviewInfo from '../review/ReviewInfo';
 import ReviewScores from '../review/ReviewScores';
 import ImageContainer from './images/ImageContainer';
 import aspectRatios from '../../constants/images/aspect-ratios';
-
-const ExpandMore = styled((props) => {
-  const { expand, ...other } = props;
-  return <IconButton {...other} />;
-})(({ theme, expand }) => ({
-  transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
-  marginLeft: 'auto',
-  transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
-}));
+import Rotate from '../../components/commons/Rotate';
 
 export default function ReviewCard({ review }) {
-  const { reviewDate, reviewer, dish, restaurantName, finalScore, scores } =
-    review;
+  const { reviewDate, reviewer, dish, restaurantName, finalScore, scores } = review;
   const [expanded, setExpanded] = React.useState(false);
 
   const handleExpandClick = () => {
@@ -34,41 +23,27 @@ export default function ReviewCard({ review }) {
 
   return (
     <Card>
-      <ReviewPersonal
-        reviewDate={reviewDate}
-        reviewer={reviewer}
-      />
+      <ReviewPersonal reviewDate={reviewDate} reviewer={reviewer} />
 
       {/* THis is for the image */}
-      <ImageContainer
-        imageUrl={dish.photoUrl}
-        component={CardMedia}
-        aspectRatio={aspectRatios.fourToThree}
-      />
+      <ImageContainer imageUrl={dish.photoUrl} component={CardMedia} aspectRatio={aspectRatios.fourToThree} />
       {/* This is the resume section */}
-      <ReviewInfo
-        dish={dish}
-        restaurantName={restaurantName}
-        finalScore={finalScore}
-      />
+      <ReviewInfo dish={dish} restaurantName={restaurantName} finalScore={finalScore} />
 
       <CardActions disableSpacing>
-        <ExpandMore
+        <Rotate
           expand={expanded}
+          component={IconButton}
           onClick={handleExpandClick}
           aria-expanded={expanded}
-          aria-label='show more'
+          aria-label="show more"
         >
           <ExpandMoreIcon />
-        </ExpandMore>
+        </Rotate>
       </CardActions>
 
       {/* As the name says, collapse section */}
-      <Collapse
-        in={expanded}
-        timeout='auto'
-        unmountOnExit
-      >
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
         <ReviewScores scores={scores} />
       </Collapse>
     </Card>
