@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
@@ -6,26 +6,41 @@ import Divider from '@mui/material/Divider';
 import { BIG_CARD_SIZE } from '../../config/components.constants';
 
 import ImageContainer from '../../components/commons/images/ImageContainer';
+import Loader from '../../components/commons/Loader';
 import Page from '../../components/layout/Page';
 import DinerCard from '../../components/DinerCard';
 
-import { useGetDinerQuery, useGetDinerReviewsQuery } from '../../services/diners';
+import { useGetDinerQuery, useLazyGetDinerReviewsQuery } from '../../services/diners';
+
+import useInfiniteLoading from '../../hooks/useInfiniteLoading';
 
 export default function Diner() {
   const params = useParams();
   const { dinerId } = params;
-
   const getDinerResponse = useGetDinerQuery(dinerId);
   const { isLoading: isDinerLoading, data: diner } = getDinerResponse;
+  const [isPageReady, setIsPageReady] = useState(false);
+  const [getDinerReview, getDinerReviewsResponse] = useLazyGetDinerReviewsQuery();
+  const {
+    items: dinerReviews,
+    hasNext,
+    loadNext,
+    loadNextRef,
+  } = useInfiniteLoading({
+    fetchItems: (params) => getDinerReview({ id: dinerId, params }),
+  });
+  const { isLoading: isDinerReviewsLoading } = getDinerReviewsResponse;
+  useEffect(() => {
+    if (dinerReviews.length > 0) {
+      setTimeout(() => {
+        setIsPageReady(true);
+      }, 200);
+    }
+  }, [dinerReviews]);
 
-  const getDinerReviewsResponse = useGetDinerReviewsQuery(dinerId);
-  const { isLoading: isDinerReviewsLoading, data: dinerReviewsResponse } = getDinerReviewsResponse;
-
-  if (isDinerLoading || isDinerReviewsLoading) {
+  if (isDinerLoading) {
     return <h3>Loading...</h3>;
   }
-
-  const { result: dinerReviews } = dinerReviewsResponse;
 
   return (
     <Page>
@@ -36,25 +51,32 @@ export default function Diner() {
         <Grid item sx={{ width: '100%', maxWidth: BIG_CARD_SIZE }}>
           <Divider variant="middle" />
         </Grid>
-        <Grid item sx={{ width: '100%', maxWidth: BIG_CARD_SIZE }}>
-          <Grid container justifyContent="center" alignItems="center" sx={{ width: '100%' }}>
-            {dinerReviews.map((review) => (
-              <ImageContainer
-                item
-                imageUrl={review.photoUrl}
-                aspectRatio="oneOnOne"
-                key={review.id}
-                xs={4}
-                imageProps={{
-                  sx: {
-                    margin: 1,
-                  },
-                }}
-                component={Grid}
-              />
-            ))}
+        {!isDinerReviewsLoading && (
+          <Grid item sx={{ width: '100%', maxWidth: BIG_CARD_SIZE }}>
+            <Grid container justifyContent="center" alignItems="center" sx={{ width: '100%' }}>
+              {dinerReviews.map((review) => (
+                <ImageContainer
+                  item
+                  imageUrl={review.photoUrl}
+                  aspectRatio="oneOnOne"
+                  key={review.id}
+                  xs={4}
+                  imageProps={{
+                    sx: {
+                      margin: 1,
+                    },
+                  }}
+                  component={Grid}
+                />
+              ))}
+            </Grid>
           </Grid>
-        </Grid>
+        )}
+        {isPageReady && hasNext && (
+          <Grid item ref={loadNextRef} onClick={() => loadNext()}>
+            <Loader />
+          </Grid>
+        )}
       </Grid>
     </Page>
   );

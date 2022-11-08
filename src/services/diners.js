@@ -8,7 +8,6 @@ const dinerTags = getTagLists(resourceName);
 
 export const dinersApi = createApi({
   reducerPath: `${resourceName}Api`,
-  keepUnusedDataFor: 5,
   baseQuery: axiosBaseQuery(),
   tagTypes: [resourceName],
   endpoints: (build) => ({
@@ -61,7 +60,9 @@ export const dinersApi = createApi({
       invalidatesTags: (result, error, id) => dinerTags.getOneTagList(),
     }),
     getDinerReviews: build.query({
-      query: (id) => ({ url: `${resourceName}/${id}/reviews`, method: 'GET' }),
+      query: ({ id, params }) => {
+        return { url: `${resourceName}/${id}/reviews`, method: 'GET', params };
+      },
       providesTags: (response) => {
         const { result } = response;
         return result ? dinerTags.getPaginatedListTagList(result.map(({ id }) => id)) : dinerTags.getListTagList();
@@ -77,4 +78,5 @@ export const {
   useUpdateDinerMutation,
   useDeleteDinerMutation,
   useGetDinerReviewsQuery,
+  useLazyGetDinerReviewsQuery,
 } = dinersApi;
