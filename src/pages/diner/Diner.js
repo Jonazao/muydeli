@@ -10,6 +10,7 @@ import Page from '../../components/layout/Page';
 import DinerCard from '../../components/DinerCard';
 
 import { useGetDinerQuery, useGetDinerReviewsQuery } from '../../services/diners';
+import aspectRatios from '../../constants/images/aspect-ratios';
 
 export default function Diner() {
   const params = useParams();
@@ -42,7 +43,7 @@ export default function Diner() {
               <ImageContainer
                 item
                 imageUrl={review.photoUrl}
-                aspectRatio="oneOnOne"
+                aspectRatio={aspectRatios.oneToOne}
                 key={review.id}
                 xs={4}
                 imageProps={{

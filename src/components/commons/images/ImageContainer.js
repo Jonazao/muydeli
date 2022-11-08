@@ -18,7 +18,7 @@ export default function ImageContainer({
         '&::before': {
           display: 'block',
           content: "''",
-          paddingBottom: '100%',
+          paddingBottom: `${aspectRatio}%`,
         },
       }}
     >
