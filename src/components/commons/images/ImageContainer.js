@@ -13,6 +13,7 @@ const ImageContainer = forwardRef(
             display: 'block',
             content: "''",
             paddingBottom: `${aspectRatio}%`,
+          },
         }}
       >
         <Box

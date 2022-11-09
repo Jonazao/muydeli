@@ -16,7 +16,7 @@ export default function Home() {
   return (
     <Page>
       <Grid container flexDirection="row" justifyContent="center" spacing={2}>
-        <Grid item sx={{ width: SMALL_CARD_SIZE }}>
+        <Grid item sx={{ maxWidth: SMALL_CARD_SIZE }}>
           <Grid container spacing={2} flexDirection="column">
             {data.result.map((review) => {
               return (
