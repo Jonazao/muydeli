@@ -1,1 +1,1 @@
-export const useAuthServer = true;
+export const useAuthServer = false;

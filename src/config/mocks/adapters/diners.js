@@ -29,7 +29,8 @@ const getDinerReviews = (config) => {
   const pageSize = params && params.pageSize ? params.pageSize : 10;
   const pageNumber = params && params.pageNumber ? params.pageNumber : 1;
   const diner = diners.find((diner) => diner.id === id);
-  const paginationResult = createPaginationResponse(diner.reviews, {
+  const { reviews } = diner;
+  const paginationResult = createPaginationResponse(reviews, {
     pageSize,
     pageNumber,
   });
