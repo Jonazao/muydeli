@@ -5,17 +5,10 @@ import Avatar from '@mui/material/Avatar';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import { useAuthServer } from '../../config/configureTemplate';
-import stringToColor from '../../helpers/string-to-color';
+import stringToAvatar from '../../helpers/string-to-avatar';
 import { setAuth } from '../../features/auth/authSlice';
 
-const stringAvatar = (fullname) => {
-  return {
-    sx: {
-      bgcolor: stringToColor(fullname),
-    },
-    children: `${fullname.split(' ')[0][0]}${fullname.split(' ')[1][0]}`,
-  };
-};
+
 
 export default function UserAvatarMenu({ fullname }) {
   const dispatch = useDispatch();
@@ -48,7 +41,7 @@ export default function UserAvatarMenu({ fullname }) {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        <Avatar {...stringAvatar(fullname)} />
+        <Avatar {...stringToAvatar(fullname)} />
       </IconButton>
       <Menu
         id="basic-menu"
