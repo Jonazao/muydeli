@@ -1,4 +1,6 @@
 import { faker } from '@faker-js/faker';
+import { createReview } from './reviews';
+
 const numberOfReviews = 57;
 
 const diners = Array.from({ length: 24 }).map((item, index) => {
@@ -17,14 +19,8 @@ const diners = Array.from({ length: 24 }).map((item, index) => {
       reviews: numberOfReviews,
       comments: 25,
     },
-    reviews: Array.from({ length: numberOfReviews }).map(() => {
-      return {
-        id: faker.datatype.uuid(),
-        photoUrl: faker.image.food(650, 293, true),
-        dish: {
-          name: faker.random.words(3),
-        },
-      };
+    reviews: Array.from({ length: numberOfReviews }).map((item, index) => {
+      return createReview(index);
     }),
   };
 });

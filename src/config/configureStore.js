@@ -3,6 +3,7 @@ import { useAuthServer } from '../config/configureTemplate';
 
 // Slices
 import authReducer from '../features/auth/authSlice';
+import modalReducer from '../features/config/modalSlice';
 
 //Services
 import { postApi } from '../services/post';
@@ -15,12 +16,13 @@ const auth = useAuthServer ? authReducer : null;
 export const store = configureStore({
   reducer: {
     auth,
+    modal: modalReducer,
     [postApi.reducerPath]: postApi.reducer,
     [dinersApi.reducerPath]: dinersApi.reducer,
     [reviewApi.reducerPath]: reviewApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware()
+    getDefaultMiddleware({ serializableCheck: false })
       .concat(postApi.middleware)
       .concat(dinersApi.middleware)
       .concat(reviewApi.middleware),
