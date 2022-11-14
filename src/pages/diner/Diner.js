@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 
@@ -8,10 +9,13 @@ import { BIG_CARD_SIZE } from '../../config/components.constants';
 import ImageContainer from '../../components/commons/images/ImageContainer';
 import Loader from '../../components/commons/Loader';
 import Page from '../../components/layout/Page';
+import Modal from '../../components/commons/Modal';
 import DinerCard from '../../components/DinerCard';
+import ReviewsModal from '../../components/modals/ReviewsModal';
 
 import { useGetDinerQuery, useLazyGetDinerReviewsQuery } from '../../services/diners';
 import useInfiniteLoading from '../../hooks/useInfiniteLoading';
+import useModal from '../../hooks/useModal';
 import aspectRatios from '../../constants/images/aspect-ratios';
 
 export default function Diner() {
@@ -21,6 +25,7 @@ export default function Diner() {
   const { isLoading: isDinerLoading, data: diner } = getDinerResponse;
   const [isPageReady, setIsPageReady] = useState(false);
   const [getDinerReview, getDinerReviewsResponse] = useLazyGetDinerReviewsQuery();
+  const { isOpen, toggle } = useModal();
   const {
     items: dinerReviews,
     hasNext,
@@ -31,16 +36,26 @@ export default function Diner() {
   });
   const { isLoading: isDinerReviewsLoading } = getDinerReviewsResponse;
   useEffect(() => {
-    if (dinerReviews.length > 0) {
+    if (dinerReviews.length > 0 && !isPageReady) {
       setTimeout(() => {
         setIsPageReady(true);
       }, 200);
     }
-  }, [dinerReviews]);
+  }, [dinerReviews, isPageReady]);
 
   if (isDinerLoading) {
-    return <h3>Loading...</h3>;
+    return (
+      <Page>
+        <Grid container flexDirection="column" alignItems="center" spacing={2}>
+          <Loader />
+        </Grid>
+      </Page>
+    );
   }
+
+  const handleOnImageClick = (id) => {
+    toggle();
+  };
 
   return (
     <Page>
@@ -56,8 +71,9 @@ export default function Diner() {
             <Grid container justifyContent="center" alignItems="center" sx={{ width: '100%' }}>
               {dinerReviews.map((review) => (
                 <ImageContainer
+                  onClick={() => handleOnImageClick(review.id)}
                   item
-                  imageUrl={review.photoUrl}
+                  imageUrl={review.dish.photoUrl}
                   aspectRatio={aspectRatios.oneToOne}
                   key={review.id}
                   xs={4}
@@ -78,6 +94,15 @@ export default function Diner() {
           </Grid>
         )}
       </Grid>
+      <Modal isOpen={isOpen} fullScreen={true}>
+        <ReviewsModal handleClose={toggle} reviews={dinerReviews}>
+          {isPageReady && hasNext && (
+            <Box item ref={loadNextRef} onClick={() => loadNext()}>
+              <Loader />
+            </Box>
+          )}
+        </ReviewsModal>
+      </Modal>
     </Page>
   );
 }
