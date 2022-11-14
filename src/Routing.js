@@ -1,10 +1,12 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
+
 import { useAuthServer } from './config/configureTemplate';
 import ProtectedRoute from './hocs/ProtectedRoute';
 
 import TopBarApp from './components/layout/TopBarApp';
 import BottomBarApp from './components/layout/BottomBarApp';
+import AppModal from './components/commons/AppModal';
 import Home from './pages/Home';
 import Places from './pages/Places';
 import Dishes from './pages/Dishes';
@@ -37,6 +39,7 @@ export default function Routing() {
           path="*"
           element={
             <ProtectedRoute>
+              <AppModal />
               <TopBarApp />
               <Routes>
                 <Route path={HOME_URL} element={<Home />} />
