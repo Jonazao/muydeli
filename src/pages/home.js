@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import React from 'react';
-import ReviewCard from '../components/commons/ReviewCard';
+import ReviewCard from '../components/ReviewCard';
 import Page from '../components/layout/Page';
 import { SMALL_CARD_SIZE } from '../config/components.constants';
 import { useGetReviewQuery } from '../services/review';
@@ -15,9 +15,9 @@ export default function Home() {
 
   return (
     <Page>
-      <Grid container flexDirection="row" justifyContent="center" spacing={2}>
-        <Grid item sx={{ maxWidth: SMALL_CARD_SIZE }}>
-          <Grid container spacing={2} flexDirection="column">
+      <Grid container justifyContent="center" alignItems="center" sx={{ width: '100%' }}>
+        <Grid item sx={{ width: '100%', maxWidth: SMALL_CARD_SIZE }}>
+          <Grid container spacing={2} flexDirection="column" alignItems="center" sx={{ p: 1 }}>
             {data.result.map((review) => {
               return (
                 <Grid item key={review.id} sx={{ width: '100%' }}>

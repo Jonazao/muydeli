@@ -16,13 +16,15 @@ export default function Page({ children, title }) {
       <Container maxWidth="xl" component="section">
         <Grid container flexDirection="column" alignItems="center" spacing={1}>
           {title && (
-            <Grid item>
+            <Grid item sx={{ width: '100%' }}>
               <Typography component="div" variant="h4">
                 {title}
               </Typography>
             </Grid>
           )}
-          <Grid item>{children}</Grid>
+          <Grid item sx={{ width: '100%' }}>
+            {children}
+          </Grid>
         </Grid>
       </Container>
     </Box>
