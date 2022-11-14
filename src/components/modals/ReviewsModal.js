@@ -11,7 +11,7 @@ import ReviewCard from '../ReviewCard';
 import { SMALL_CARD_SIZE } from '../../config/components.constants';
 import Page from '../layout/Page';
 
-export default function ReviewsModal({ reviews, children, handleClose }) {
+export default function ReviewsModal({ reviews, selectedItem, handleClose, children }) {
   const [isPageReady, setIsPageReady] = useState(false);
   useEffect(() => {
     if (reviews.length > 0 && !isPageReady) {
@@ -20,6 +20,13 @@ export default function ReviewsModal({ reviews, children, handleClose }) {
       }, 200);
     }
   }, [reviews, isPageReady]);
+
+  useEffect(() => {
+    if (selectedItem) {
+      const selectedItemElement = document.getElementById(selectedItem);
+      selectedItemElement.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    }
+  }, [selectedItem]);
 
   return (
     <>
@@ -39,7 +46,7 @@ export default function ReviewsModal({ reviews, children, handleClose }) {
             <Grid container spacing={2} flexDirection="column" alignItems="center" sx={{ p: 1 }}>
               {reviews?.map((review) => {
                 return (
-                  <Grid item key={review.id} sx={{ width: '100%' }}>
+                  <Grid item key={review.id} id={review.id} sx={{ width: '100%' }}>
                     <ReviewCard review={review} />
                   </Grid>
                 );

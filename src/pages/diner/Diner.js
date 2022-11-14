@@ -24,6 +24,7 @@ export default function Diner() {
   const getDinerResponse = useGetDinerQuery(dinerId);
   const { isLoading: isDinerLoading, data: diner } = getDinerResponse;
   const [isPageReady, setIsPageReady] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
   const [getDinerReview, getDinerReviewsResponse] = useLazyGetDinerReviewsQuery();
   const { isOpen, toggle } = useModal();
   const {
@@ -54,6 +55,7 @@ export default function Diner() {
   }
 
   const handleOnImageClick = (id) => {
+    setSelectedItem(id);
     toggle();
   };
 
@@ -95,7 +97,7 @@ export default function Diner() {
         )}
       </Grid>
       <Modal isOpen={isOpen} fullScreen={true}>
-        <ReviewsModal handleClose={toggle} reviews={dinerReviews}>
+        <ReviewsModal handleClose={toggle} reviews={dinerReviews} selectedItem={selectedItem}>
           {isPageReady && hasNext && (
             <Box item ref={loadNextRef} onClick={() => loadNext()}>
               <Loader />
