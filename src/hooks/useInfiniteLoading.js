@@ -3,11 +3,12 @@ import { useInView } from 'react-cool-inview';
 import { isNil } from '../validations/is-nil';
 
 const mergeMethods = {
+  init: 'init',
   append: 'append',
   prepend: 'prepend',
 };
 
-export default function useInfiniteLoading({ fetchItems }) {
+export default function useInfiniteLoading({ fetchItems, fetchOnInit = true }) {
   // Memorize loaded pages
   const initialPageNumber = useRef(1);
   const lowestPageNumber = useRef(initialPageNumber.current);
@@ -28,21 +29,34 @@ export default function useInfiniteLoading({ fetchItems }) {
       const { result, pagination } = data;
       setHasNext(!isNil(pagination.urls.next));
       setHasPrevious(!isNil(pagination.urls.previous));
-      setItems((prevItems) =>
-        mergeMethod === mergeMethods.append ? [...prevItems, ...result] : [...result, ...prevItems],
-      );
+      setItems((prevItems) => {
+        switch (mergeMethod) {
+          case mergeMethods.append:
+            return [...prevItems, ...result];
+          case mergeMethods.prepend:
+            return [...result, ...prevItems];
+          default:
+            return [...result];
+        }
+      });
     },
     [fetchItems],
   );
+
+  const loadInitialItems = useCallback(async () => {
+    highestPageNumber.current = initialPageNumber.current;
+    loadItems(initialPageNumber.current, pageSize.current, mergeMethods.init);
+    initialPageLoaded.current = true;
+  }, [loadItems]);
 
   useEffect(() => {
     if (initialPageLoaded.current) {
       return;
     }
-
-    loadItems(initialPageNumber.current, pageSize.current, mergeMethods.append);
-    initialPageLoaded.current = true;
-  }, [loadItems]);
+    if (fetchOnInit) {
+      loadInitialItems();
+    }
+  }, [loadInitialItems, fetchOnInit]);
 
   const loadNext = () => {
     // No more pages to load just for safety
@@ -77,6 +91,7 @@ export default function useInfiniteLoading({ fetchItems }) {
     items,
     hasNext,
     hasPrevious,
+    loadInitialItems,
     loadItems,
     loadNext,
     loadPrevious,

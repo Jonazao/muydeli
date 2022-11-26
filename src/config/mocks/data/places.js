@@ -7,7 +7,7 @@ const createPlace = (id) => {
     id: id,
     name: faker.company.name(),
     address: {
-      addressLine: faker.address.streetName(),
+      addressLine: faker.address.street(),
       lat,
       lng,
     },

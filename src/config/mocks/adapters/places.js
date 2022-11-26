@@ -1,12 +1,17 @@
-import places from '../data/places';
+import rawPlaces from '../data/places';
 import { extractIdPathParamFromUrl, createPaginationResponse } from '../common/helpers';
+const places = rawPlaces.sort((a, b) => a.name.localeCompare(b.name));
 
 const getPlaces = (config) => {
   console.log('getPlaces mock');
   const { params } = config;
   const pageSize = params && params.pageSize ? params.pageSize : 10;
   const pageNumber = params && params.pageNumber ? params.pageNumber : 1;
-  const paginationResult = createPaginationResponse(places, {
+  const searchText = params && params.searchText ? params.searchText : null;
+  const filteredPlaces = searchText
+    ? places.filter((place) => place.name.toLocaleLowerCase().includes(searchText.toLocaleLowerCase()))
+    : places;
+  const paginationResult = createPaginationResponse(filteredPlaces, {
     pageSize,
     pageNumber,
   });

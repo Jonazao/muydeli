@@ -1,11 +1,11 @@
-import React, { useRef, useImperativeHandle, forwardRef } from 'react';
+import React, { useState, useRef, useImperativeHandle, forwardRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 
-import Loader from '../commons/Loader';
-
+import { isNil } from '../../validations/is-nil';
 import useInfiniteLoading from '../../hooks/useInfiniteLoading';
+import useDebounce from '../../hooks/useDebounce';
 
 const ListBox = forwardRef(function ListBoxBase(props, ref) {
   const { children, ...rest } = props;
@@ -23,11 +23,21 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
 });
 
 export default function LazyAutocomplete({ lazyFetchFunction, fetchFunctionParams, setSelectedOption }) {
-  const [getItem, getItemsResponse] = lazyFetchFunction();
-  const { isLoading: isGetItemsLoading } = getItemsResponse;
-  const { items, hasNext, loadNext } = useInfiniteLoading({
-    fetchItems: (params) => getItem({ ...fetchFunctionParams, params }),
+  const [searchText, setSearchText] = useState(null);
+  const debouncedSearchText = useDebounce(searchText, 500);
+  const [getItem] = lazyFetchFunction();
+  const { items, loadInitialItems, hasNext, loadNext } = useInfiniteLoading({
+    fetchItems: (params) =>
+      getItem({ ...fetchFunctionParams, params: { ...params, searchText: debouncedSearchText } }),
+    fetchOnInit: false,
   });
+
+  useEffect(() => {
+    if (!isNil(debouncedSearchText)) {
+      loadInitialItems();
+    }
+    // eslint-disable-next-line
+  }, [debouncedSearchText]);
 
   const loadMoreResults = () => {
     if (hasNext) {
@@ -36,26 +46,27 @@ export default function LazyAutocomplete({ lazyFetchFunction, fetchFunctionParam
   };
 
   const handleScroll = (event) => {
-    const listboxNode = event.currentTarget;
+    const listBoxNode = event.currentTarget;
 
-    const position = listboxNode.scrollTop + listboxNode.clientHeight;
-    if (listboxNode.scrollHeight - position <= 1) {
+    const position = listBoxNode.scrollTop + listBoxNode.clientHeight;
+    if (listBoxNode.scrollHeight - position <= 1) {
       loadMoreResults();
     }
   };
 
-  if (isGetItemsLoading) {
-    return <Loader />;
-  }
-
   const handleOnChange = (e, value) => {
     setSelectedOption(value);
+  };
+
+  const handleInputChange = (e, newValue) => {
+    setSearchText(newValue);
   };
 
   return (
     <MuiAutocomplete
       options={items}
       onChange={handleOnChange}
+      onInputChange={handleInputChange}
       ListboxComponent={ListBox}
       autoHighlight
       getOptionLabel={(option) => option.name}
@@ -77,6 +88,7 @@ export default function LazyAutocomplete({ lazyFetchFunction, fetchFunctionParam
       ListboxProps={{
         onScroll: handleScroll,
       }}
+      filterOptions={(x) => x}
     />
   );
 }
