@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Map from '../google-maps/Map';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -13,9 +13,9 @@ import { isNil } from '../../validations/is-nil';
 
 export default function SelectPlace({ selectedPlace, setSelectedPlace }) {
   const [autoCompleteSelectedOption, setAutoCompleteSelectedOption] = useState(selectedPlace);
-  const handleOnPlaceSelect = () => {
+  const handleOnPlaceSelect = useCallback(() => {
     setSelectedPlace(autoCompleteSelectedOption);
-  };
+  }, [setSelectedPlace, autoCompleteSelectedOption]);
 
   useEffect(() => {
     if (isNil(autoCompleteSelectedOption)) {
