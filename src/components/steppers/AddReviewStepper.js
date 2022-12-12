@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import MuiStep from '@mui/material/Step';
@@ -22,18 +22,21 @@ export default function AddReviewStepper() {
   const [skipped, setSkipped] = React.useState(new Set());
   const [selectedPlace, setSelectedPlace] = useState(null);
 
-  const isValidStep = (step) => {
-    switch (step) {
-      case 0:
-        return !isNil(selectedPlace);
-      case 1:
-        return true;
-      case 2:
-        return true;
-      default:
-        return null;
-    }
-  };
+  const isValidStep = useCallback(
+    (step) => {
+      switch (step) {
+        case 0:
+          return !isNil(selectedPlace);
+        case 1:
+          return true;
+        case 2:
+          return true;
+        default:
+          return null;
+      }
+    },
+    [selectedPlace],
+  );
 
   const isStepOptional = (step) => {
     return step.isOptional;
@@ -43,19 +46,19 @@ export default function AddReviewStepper() {
     return skipped.has(step);
   };
 
-  const handleFinish = async () => {
+  const handleFinish = useCallback(async () => {
     console.log('Done');
-  };
+  }, []);
 
-  const handleBack = () => {
+  const handleBack = useCallback(() => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+  }, [setActiveStep]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     isValidStep(activeStep) && setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+  }, [isValidStep, setActiveStep, activeStep]);
 
-  const handleSkip = () => {
+  const handleSkip = useCallback(() => {
     if (!isStepOptional(activeStep)) {
       // You probably want to guard against something like this,
       // it should never occur unless someone's actively trying to break something.
@@ -68,11 +71,14 @@ export default function AddReviewStepper() {
       newSkipped.add(activeStep);
       return newSkipped;
     });
-  };
+  }, [setSkipped, setActiveStep, activeStep]);
 
-  const handleOnPlaceSelect = (place) => {
-    setSelectedPlace(place);
-  };
+  const handleOnPlaceSelect = useCallback(
+    (place) => {
+      setSelectedPlace(place);
+    },
+    [setSelectedPlace],
+  );
 
   const getStepperComponent = (step) => {
     const currentStep = steps[step];
@@ -80,6 +86,8 @@ export default function AddReviewStepper() {
     switch (step) {
       case 0:
         return <StepComponent selectedPlace={selectedPlace} setSelectedPlace={handleOnPlaceSelect} />;
+      case 1:
+        return StepComponent && <StepComponent />;
       default:
         return StepComponent && <StepComponent />;
     }
