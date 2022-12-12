@@ -1,4 +1,4 @@
-import React, { useState, useRef, useImperativeHandle, forwardRef, useEffect } from 'react';
+import React, { useState, useRef, useCallback, useImperativeHandle, forwardRef, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MuiAutocomplete from '@mui/material/Autocomplete';
@@ -56,13 +56,51 @@ export default function LazyAutocomplete({
     }
   };
 
-  const handleOnChange = (e, value) => {
-    setSelectedOption(value);
-  };
+  const handleOnChange = useCallback(
+    (e, value) => {
+      setSelectedOption(value);
+    },
+    [setSelectedOption],
+  );
 
-  const handleInputChange = (e, newValue) => {
-    setSearchText(newValue);
-  };
+  const handleInputChange = useCallback(
+    (e, newValue) => {
+      setSearchText(newValue);
+    },
+    [setSearchText],
+  );
+
+  const handleGetOptionLabel = useCallback((option) => option.name, []);
+
+  const handleRenderOption = useCallback(
+    (props, option) => (
+      <Box component="li" {...props}>
+        {option.name} - ({option.address.addressLine})
+      </Box>
+    ),
+    [],
+  );
+
+  const handleIsOptionEqualToValue = useCallback(
+    (option, value) => value.id === selectedOption.id,
+    [selectedOption],
+  );
+
+  const handleRenderInput = useCallback(
+    (params) => (
+      <TextField
+        {...params}
+        label="Choose a place"
+        inputProps={{
+          ...params.inputProps,
+          autoComplete: 'new-password', // disable autocomplete and autofill
+        }}
+      />
+    ),
+    [],
+  );
+
+  const handleFilterOption = useCallback((x) => x, []);
 
   return (
     <MuiAutocomplete
@@ -72,27 +110,14 @@ export default function LazyAutocomplete({
       onInputChange={handleInputChange}
       ListboxComponent={ListBox}
       autoHighlight
-      getOptionLabel={(option) => option.name}
-      renderOption={(props, option) => (
-        <Box component="li" {...props}>
-          {option.name} - ({option.address.addressLine})
-        </Box>
-      )}
-      isOptionEqualToValue={(option, value) => option.id === value.id}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Choose a place"
-          inputProps={{
-            ...params.inputProps,
-            autoComplete: 'new-password', // disable autocomplete and autofill
-          }}
-        />
-      )}
+      getOptionLabel={handleGetOptionLabel}
+      renderOption={handleRenderOption}
+      isOptionEqualToValue={handleIsOptionEqualToValue}
+      renderInput={handleRenderInput}
       ListboxProps={{
         onScroll: handleScroll,
       }}
-      filterOptions={(x) => x}
+      filterOptions={handleFilterOption}
     />
   );
 }
