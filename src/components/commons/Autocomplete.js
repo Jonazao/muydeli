@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 
-import { isNil } from '../../validations/is-nil';
 import useInfiniteLoading from '../../hooks/useInfiniteLoading';
 import useDebounce from '../../hooks/useDebounce';
 
@@ -22,7 +21,12 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
   );
 });
 
-export default function LazyAutocomplete({ lazyFetchFunction, fetchFunctionParams, setSelectedOption }) {
+export default function LazyAutocomplete({
+  lazyFetchFunction,
+  fetchFunctionParams,
+  selectedOption,
+  setSelectedOption,
+}) {
   const [searchText, setSearchText] = useState(null);
   const debouncedSearchText = useDebounce(searchText, 500);
   const [getItem] = lazyFetchFunction();
@@ -33,9 +37,7 @@ export default function LazyAutocomplete({ lazyFetchFunction, fetchFunctionParam
   });
 
   useEffect(() => {
-    if (!isNil(debouncedSearchText)) {
-      loadInitialItems();
-    }
+    loadInitialItems();
     // eslint-disable-next-line
   }, [debouncedSearchText]);
 
@@ -64,6 +66,7 @@ export default function LazyAutocomplete({ lazyFetchFunction, fetchFunctionParam
 
   return (
     <MuiAutocomplete
+      value={selectedOption}
       options={items}
       onChange={handleOnChange}
       onInputChange={handleInputChange}
@@ -75,6 +78,7 @@ export default function LazyAutocomplete({ lazyFetchFunction, fetchFunctionParam
           {option.name} - ({option.address.addressLine})
         </Box>
       )}
+      isOptionEqualToValue={(option, value) => option.id === value.id}
       renderInput={(params) => (
         <TextField
           {...params}
