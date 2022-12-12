@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Grid from '@mui/material/Grid';
 
 import { SMALL_CARD_SIZE } from '../config/components.constants';
@@ -12,7 +12,7 @@ import useAppModal from '../hooks/useAppModal';
 export default function Dishes() {
   const { openModal, closeModal } = useAppModal();
 
-  const handleFabClick = () => {
+  const handleFabClick = useCallback(() => {
     openModal({
       modalProps: {
         fullWidth: true,
@@ -22,7 +22,7 @@ export default function Dishes() {
       },
       content: <AddReviewModal />,
     });
-  };
+  }, [openModal, closeModal]);
 
   return (
     <Page>
