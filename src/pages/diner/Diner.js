@@ -101,7 +101,7 @@ export default function Diner() {
       <Modal isOpen={isOpen} fullScreen={true}>
         <ReviewsModal handleClose={toggle} reviews={dinerReviews} selectedItem={selectedItem}>
           {isPageReady && hasNext && (
-            <Box ref={loadNextRef} onClick={() => loadNext()}>
+            <Box ref={loadNextRef} onClick={loadNext}>
               <Loader />
             </Box>
           )}
