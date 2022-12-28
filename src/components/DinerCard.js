@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
@@ -13,9 +13,9 @@ import DinerSummary from './diner/DinerSummary';
 export default function DinerCard({ diner, onCardClick }) {
   const { id, photoUrl, firstName, lastName, title, info, contributions } = diner;
 
-  const handleOnCardClick = () => {
+  const handleOnCardClick = useCallback(() => {
     onCardClick(id);
-  };
+  }, [onCardClick, id]);
 
   const useCardActionArea = (Component) => {
     if (!onCardClick) return Component;

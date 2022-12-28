@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Navigate, useLocation } from 'react-router-dom';
 import { setAuth } from '../features/auth/authSlice';
@@ -10,9 +10,9 @@ export default function Login() {
   const location = useLocation();
 
   const dispatch = useDispatch();
-  const handleOnLoginClick = () => {
+  const handleOnLoginClick = useCallback(() => {
     dispatch(setAuth({ isAuthenticated: true }));
-  };
+  }, [dispatch]);
 
   if (isAuthenticated) {
     if (location.state) {

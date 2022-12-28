@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
@@ -11,9 +11,13 @@ import useMenuNavigation from '../../hooks/useMenuNavigation';
 export default function BottomBarApp() {
   const { navigationItem, setNavigationItem } = useMenuNavigation();
 
-  const handleOnChange = (event, newValue) => {
-    setNavigationItem(newValue);
-  };
+  const handleOnChange = useCallback(
+    (event, newValue) => {
+      setNavigationItem(newValue);
+    },
+    [setNavigationItem],
+  );
+
   const isMediumOrDown = useMediaQuery((theme) => theme.breakpoints.down('lg'));
   return (
     isMediumOrDown && (

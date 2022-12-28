@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -44,6 +44,14 @@ export default function Diner() {
     }
   }, [dinerReviews, isPageReady]);
 
+  const handleOnImageClick = useCallback(
+    (id) => {
+      setSelectedItem(id);
+      toggle();
+    },
+    [setSelectedItem, toggle],
+  );
+
   if (isDinerLoading) {
     return (
       <Page>
@@ -53,11 +61,6 @@ export default function Diner() {
       </Page>
     );
   }
-
-  const handleOnImageClick = (id) => {
-    setSelectedItem(id);
-    toggle();
-  };
 
   return (
     <Page>
@@ -98,11 +101,11 @@ export default function Diner() {
       </Grid>
       <Modal isOpen={isOpen} fullScreen={true}>
         <ReviewsModal handleClose={toggle} reviews={dinerReviews} selectedItem={selectedItem}>
-          {isPageReady && hasNext && (
+          {/* {isPageReady && hasNext && (
             <Box item ref={loadNextRef} onClick={() => loadNext()}>
               <Loader />
             </Box>
-          )}
+          )} */}
         </ReviewsModal>
       </Modal>
     </Page>
