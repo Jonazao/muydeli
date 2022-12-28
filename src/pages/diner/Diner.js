@@ -27,6 +27,13 @@ export default function Diner() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [getDinerReview, getDinerReviewsResponse] = useLazyGetDinerReviewsQuery();
   const { isOpen, toggle } = useModal();
+  const handleOnImageClick = useCallback(
+    (id) => {
+      setSelectedItem(id);
+      toggle();
+    },
+    [setSelectedItem, toggle],
+  );
   const {
     items: dinerReviews,
     hasNext,
@@ -43,14 +50,6 @@ export default function Diner() {
       }, 200);
     }
   }, [dinerReviews, isPageReady]);
-
-  const handleOnImageClick = useCallback(
-    (id) => {
-      setSelectedItem(id);
-      toggle();
-    },
-    [setSelectedItem, toggle],
-  );
 
   if (isDinerLoading) {
     return (
@@ -94,18 +93,18 @@ export default function Diner() {
           </Grid>
         )}
         {isPageReady && hasNext && (
-          <Grid item ref={loadNextRef} onClick={() => loadNext()}>
+          <Grid item ref={loadNextRef} onClick={loadNext}>
             <Loader />
           </Grid>
         )}
       </Grid>
       <Modal isOpen={isOpen} fullScreen={true}>
         <ReviewsModal handleClose={toggle} reviews={dinerReviews} selectedItem={selectedItem}>
-          {/* {isPageReady && hasNext && (
-            <Box item ref={loadNextRef} onClick={() => loadNext()}>
+          {isPageReady && hasNext && (
+            <Box ref={loadNextRef} onClick={() => loadNext()}>
               <Loader />
             </Box>
-          )} */}
+          )}
         </ReviewsModal>
       </Modal>
     </Page>

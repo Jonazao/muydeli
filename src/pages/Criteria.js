@@ -10,8 +10,8 @@ export default function Criteria() {
       <Grid container flexDirection="row" justifyContent="center" spacing={2}>
         <Grid item sx={{ width: '100%', maxWidth: SMALL_CARD_SIZE }}>
           <Grid container flexDirection="column" spacing={4}>
-            {criteriaGroups.map((criteriaGroup, index) => (
-              <Grid key={`criteria-group-${index}`} item>
+            {criteriaGroups.map((criteriaGroup) => (
+              <Grid key={`criteria-group-${criteriaGroup.name}`} item>
                 <CriteriaGroup criteria={criteriaGroup.criteria} name={criteriaGroup.name} />
               </Grid>
             ))}

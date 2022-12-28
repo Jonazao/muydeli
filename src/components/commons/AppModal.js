@@ -12,10 +12,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import Page from '../layout/Page';
 import { BIG_CARD_SIZE } from '../../config/components.constants';
 
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="left" ref={ref} {...props} />;
+});
+
 export default function AppModal() {
-  const Transition = forwardRef(function Transition(props, ref) {
-    return <Slide direction="left" ref={ref} {...props} />;
-  });
   const { isOpen, modalProps, content } = useSelector((store) => store.modal);
   const { onClose, title, ...restModalProps } = modalProps;
   if (!isOpen) {
