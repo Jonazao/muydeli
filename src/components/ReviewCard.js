@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useCallback } from 'react';
 
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
@@ -15,17 +15,17 @@ import Rotate from './commons/transitions/Rotate';
 
 export default function ReviewCard({ review }) {
   const { reviewDate, reviewer, dish, restaurantName, finalScore, scores } = review;
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
 
-  const handleExpandClick = () => {
+  const handleExpandClick = useCallback(() => {
     setExpanded(!expanded);
-  };
+  }, [setExpanded, expanded]);
 
   return (
     <Card variant="outlined">
       <ReviewPersonal reviewDate={reviewDate} reviewer={reviewer} />
 
-      {/* THis is for the image */}
+      {/* This is for the image */}
       <ImageContainer imageUrl={dish.photoUrl} component={CardMedia} aspectRatio={aspectRatios.fourToThree} />
       {/* This is the resume section */}
       <ReviewInfo dish={dish} restaurantName={restaurantName} finalScore={finalScore} />

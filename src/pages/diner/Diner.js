@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
@@ -27,6 +27,13 @@ export default function Diner() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [getDinerReview, getDinerReviewsResponse] = useLazyGetDinerReviewsQuery();
   const { isOpen, toggle } = useModal();
+  const handleOnImageClick = useCallback(
+    (id) => {
+      setSelectedItem(id);
+      toggle();
+    },
+    [setSelectedItem, toggle],
+  );
   const {
     items: dinerReviews,
     hasNext,
@@ -53,11 +60,6 @@ export default function Diner() {
       </Page>
     );
   }
-
-  const handleOnImageClick = (id) => {
-    setSelectedItem(id);
-    toggle();
-  };
 
   return (
     <Page>
@@ -91,7 +93,7 @@ export default function Diner() {
           </Grid>
         )}
         {isPageReady && hasNext && (
-          <Grid item ref={loadNextRef} onClick={() => loadNext()}>
+          <Grid item ref={loadNextRef} onClick={loadNext}>
             <Loader />
           </Grid>
         )}
@@ -99,7 +101,7 @@ export default function Diner() {
       <Modal isOpen={isOpen} fullScreen={true}>
         <ReviewsModal handleClose={toggle} reviews={dinerReviews} selectedItem={selectedItem}>
           {isPageReady && hasNext && (
-            <Box item ref={loadNextRef} onClick={() => loadNext()}>
+            <Box item ref={loadNextRef} onClick={loadNext}>
               <Loader />
             </Box>
           )}
