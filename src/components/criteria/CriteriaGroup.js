@@ -10,8 +10,8 @@ export default function CriteriaGroup({ name, criteria }) {
       <Grid item>
         <Typography variant="h5">{name}</Typography>
       </Grid>
-      {criteria.map((item, index) => (
-        <Grid key={`criteria-card-${index}`} item>
+      {criteria.map((item) => (
+        <Grid key={`criteria-card-${item.title}`} item>
           <CriteriaCard title={item.title} description={item.description} examples={item.examples} />
         </Grid>
       ))}
