@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 
@@ -15,9 +15,12 @@ export default function Diners() {
   const getDinersResponse = useGetDinersQuery();
   const { isLoading, data } = getDinersResponse;
 
-  const onCardClick = (id) => {
-    navigate(`${NAVIGATION_DINERS_URL}/${id}`);
-  };
+  const onCardClick = useCallback(
+    (id) => {
+      navigate(`${NAVIGATION_DINERS_URL}/${id}`);
+    },
+    [navigate],
+  );
 
   if (isLoading) {
     return <h3>Loading...</h3>;

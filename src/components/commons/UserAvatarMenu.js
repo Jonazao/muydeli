@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 import IconButton from '@mui/material/IconButton';
 import Avatar from '@mui/material/Avatar';
@@ -8,29 +8,27 @@ import { useAuthServer } from '../../config/configureTemplate';
 import stringToAvatar from '../../helpers/string-to-avatar';
 import { setAuth } from '../../features/auth/authSlice';
 
-
-
-export default function UserAvatarMenu({ fullname }) {
+export default function UserAvatarMenu({ fullName }) {
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
 
-  if (!fullname || !useAuthServer) {
-    return null;
-  }
-
   const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
+  const handleClick = useCallback((event) => {
     setAnchorEl(event.currentTarget);
-  };
+  }, []);
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null);
-  };
+  }, []);
 
-  const handleOnLogoutClick = () => {
-    dispatch(setAuth({ isAutenticated: false }));
-  };
+  const handleOnLogoutClick = useCallback(() => {
+    dispatch(setAuth({ isAuthenticated: false }));
+  }, [dispatch]);
+
+  if (!fullName || !useAuthServer) {
+    return null;
+  }
 
   return (
     <div>
@@ -41,7 +39,7 @@ export default function UserAvatarMenu({ fullname }) {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        <Avatar {...stringToAvatar(fullname)} />
+        <Avatar {...stringToAvatar(fullName)} />
       </IconButton>
       <Menu
         id="basic-menu"
