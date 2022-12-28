@@ -51,7 +51,6 @@ export default function ReviewsModal({ reviews, selectedItem, handleClose, child
                   </Grid>
                 );
               })}
-              {/* {isPageReady && loader} */}
             </Grid>
           </Grid>
           <Grid item>{children}</Grid>
