@@ -9,10 +9,11 @@ import { isNil } from '../../validations/is-nil';
 
 import Step from '../steppers/Step';
 import SelectPlaceStep from './add-review-stepper/SelectPlaceStep';
+import SelectPhotoStep from './add-review-stepper/SelectPhotoStep';
 
 const steps = [
   { label: 'Select a place', component: SelectPlaceStep, isOptional: false },
-  { label: 'Upload photos', component: () => <h1>Step 2</h1>, isOptional: false },
+  { label: 'Upload photos', component: SelectPhotoStep, isOptional: false },
   { label: 'Set ratings', component: () => <h1>Step 3</h1>, isOptional: false },
 ];
 
