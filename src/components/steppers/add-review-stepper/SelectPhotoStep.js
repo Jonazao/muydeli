@@ -2,14 +2,19 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 import ImageCrop from '../../commons/images/crop/ImageCrop';
 import { Box } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ImageContainer from '../../commons/images/ImageContainer';
 import aspectRatios from '../../../constants/images/aspect-ratios';
 import imagePlaceHolder from '../../../assets/image-place-holder.jpg';
 
-export default function SelectPhotoStep() {
-  const [file, setFile] = useState(null);
+export default function SelectPhotoStep({ file, setFile }) {
   const [photoURL, setPhotoURL] = useState(null);
+
+  useEffect(() => {
+    if (file && !photoURL) {
+      setPhotoURL(URL.createObjectURL(file));
+    }
+  }, [file, photoURL]);
 
   const handleChange = (e) => {
     const file = e.target.files[0];

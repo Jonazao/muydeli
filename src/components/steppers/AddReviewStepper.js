@@ -10,18 +10,37 @@ import { isNil } from '../../validations/is-nil';
 import Step from '../steppers/Step';
 import SelectPlaceStep from './add-review-stepper/SelectPlaceStep';
 import SelectPhotoStep from './add-review-stepper/SelectPhotoStep';
+import AddReviewStep from './add-review-stepper/AddReviewStep';
 
 const steps = [
   { label: 'Select a place', component: SelectPlaceStep, isOptional: false },
   { label: 'Upload photos', component: SelectPhotoStep, isOptional: false },
-  { label: 'Set ratings', component: () => <h1>Step 3</h1>, isOptional: false },
+  { label: 'Set ratings', component: AddReviewStep, isOptional: false },
 ];
+
+const defaultScores = {
+  isFinished: false,
+  taste: {
+    expectation: null,
+    flavor: null,
+  },
+  presentation: {
+    firstImpression: null,
+    plating: null,
+  },
+  quantity: {
+    satietyLevel: null,
+    garnishes: null,
+  },
+};
 
 export default function AddReviewStepper() {
   const containerRef = useRef(null);
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [file, setFile] = useState(null);
+  const [scores, setScores] = useState(defaultScores);
 
   const isValidStep = useCallback(
     (step) => {
@@ -29,14 +48,14 @@ export default function AddReviewStepper() {
         case 0:
           return !isNil(selectedPlace);
         case 1:
-          return true;
+          return !isNil(file);
         case 2:
-          return true;
+          return scores.isFinished;
         default:
           return null;
       }
     },
-    [selectedPlace],
+    [selectedPlace, file, scores],
   );
 
   const isStepOptional = (step) => {
@@ -48,8 +67,13 @@ export default function AddReviewStepper() {
   };
 
   const handleFinish = useCallback(async () => {
-    console.log('Done');
-  }, []);
+    const payload = {
+      selectedPlace,
+      file,
+      scores,
+    };
+    console.log(payload);
+  }, [selectedPlace, file, scores]);
 
   const handleBack = useCallback(() => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -88,9 +112,9 @@ export default function AddReviewStepper() {
       case 0:
         return <StepComponent selectedPlace={selectedPlace} setSelectedPlace={handleOnPlaceSelect} />;
       case 1:
-        return StepComponent && <StepComponent />;
+        return <StepComponent file={file} setFile={setFile} />;
       default:
-        return StepComponent && <StepComponent />;
+        return <StepComponent scores={scores} setScores={setScores} />;
     }
   };
 
