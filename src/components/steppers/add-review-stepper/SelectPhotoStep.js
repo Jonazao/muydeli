@@ -6,7 +6,6 @@ import { useState } from 'react';
 import ImageContainer from '../../commons/images/ImageContainer';
 import aspectRatios from '../../../constants/images/aspect-ratios';
 import imagePlaceHolder from '../../../assets/image-place-holder.jpg';
-import { minHeight } from '@mui/system';
 
 export default function SelectPhotoStep() {
   const [file, setFile] = useState(null);
