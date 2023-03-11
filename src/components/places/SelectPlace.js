@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 
 import foodType from '../../constants/dishes/food-type';
 
-import Autocomplete from '../commons/Autocomplete';
+import LazyAutocomplete from '../commons/LazyAutocomplete';
 
 import { useLazyGetPlacesQuery } from '../../services/places';
 import { isNil } from '../../validations/is-nil';
@@ -22,14 +22,16 @@ export default function SelectPlace({ selectedPlace, setSelectedPlace }) {
       setSelectedPlace(autoCompleteSelectedOption);
     }
   }, [setSelectedPlace, autoCompleteSelectedOption]);
+  const getLabelOption = (option) => `${option.name}-${option.address.addressLine}`;
 
   return (
     <Grid container flexDirection="column" alignItems="flex-start">
       <Grid item xs={12} sx={{ width: '100%' }} alignSelf="center">
-        <Autocomplete
+        <LazyAutocomplete
           selectedOption={autoCompleteSelectedOption}
           setSelectedOption={setAutoCompleteSelectedOption}
           lazyFetchFunction={useLazyGetPlacesQuery}
+          getLabelOption={getLabelOption}
         />
       </Grid>
       {autoCompleteSelectedOption && (

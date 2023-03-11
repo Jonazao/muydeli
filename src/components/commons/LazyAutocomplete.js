@@ -3,8 +3,8 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 
+import useInfiniteLoading from '../../hooks/useInfiniteLoading';
 import useDebounce from '../../hooks/useDebounce';
-import { isNil } from '../../validations/is-nil';
 
 const ListBox = forwardRef(function ListBoxBase(props, ref) {
   const { children, ...rest } = props;
@@ -21,18 +21,41 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
   );
 });
 
-export default function Autocomplete({ items, selectedOption, setSelectedOption, getLabelOption }) {
+export default function LazyAutocomplete({
+  lazyFetchFunction,
+  fetchFunctionParams,
+  selectedOption,
+  setSelectedOption,
+  getLabelOption,
+}) {
   const [searchText, setSearchText] = useState(null);
-  const [filteredItems, setFilteredItems] = useState(items);
-  const debouncedSearchText = useDebounce(searchText, 150);
+  const debouncedSearchText = useDebounce(searchText, 500);
+  const [getItem] = lazyFetchFunction();
+  const { items, loadInitialItems, hasNext, loadNext } = useInfiniteLoading({
+    fetchItems: (params) =>
+      getItem({ ...fetchFunctionParams, params: { ...params, searchText: debouncedSearchText } }),
+    fetchOnInit: false,
+  });
 
   useEffect(() => {
-    if (!isNil(searchText)) {
-      const newItems = items.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
-      setFilteredItems(newItems);
-    }
+    loadInitialItems();
     // eslint-disable-next-line
   }, [debouncedSearchText]);
+
+  const loadMoreResults = () => {
+    if (hasNext) {
+      loadNext();
+    }
+  };
+
+  const handleScroll = (event) => {
+    const listBoxNode = event.currentTarget;
+
+    const position = listBoxNode.scrollTop + listBoxNode.clientHeight;
+    if (listBoxNode.scrollHeight - position <= 1) {
+      loadMoreResults();
+    }
+  };
 
   const handleOnChange = useCallback(
     (e, value) => {
@@ -83,7 +106,7 @@ export default function Autocomplete({ items, selectedOption, setSelectedOption,
   return (
     <MuiAutocomplete
       value={selectedOption}
-      options={filteredItems}
+      options={items}
       onChange={handleOnChange}
       onInputChange={handleInputChange}
       ListboxComponent={ListBox}
@@ -92,6 +115,9 @@ export default function Autocomplete({ items, selectedOption, setSelectedOption,
       renderOption={handleRenderOption}
       isOptionEqualToValue={handleIsOptionEqualToValue}
       renderInput={handleRenderInput}
+      ListboxProps={{
+        onScroll: handleScroll,
+      }}
       filterOptions={handleFilterOption}
     />
   );

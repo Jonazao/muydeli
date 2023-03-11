@@ -48,6 +48,7 @@ export default function AddReviewStepper() {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [selectedDish, setSelectedDish] = useState(null);
   const [file, setFile] = useState(null);
   const [scores, setScores] = useState(defaultScores);
 
@@ -117,6 +118,13 @@ export default function AddReviewStepper() {
     [setSelectedPlace],
   );
 
+  const handleOnDishSelect = useCallback(
+    (dish) => {
+      setSelectedDish(dish);
+    },
+    [setSelectedDish],
+  );
+
   const getStepperComponent = (step) => {
     const currentStep = steps[step];
     const StepComponent = currentStep.component;
@@ -124,7 +132,13 @@ export default function AddReviewStepper() {
       case stepIds.PLACE:
         return <StepComponent selectedPlace={selectedPlace} setSelectedPlace={handleOnPlaceSelect} />;
       case stepIds.DISH:
-        return <StepComponent />;
+        return (
+          <StepComponent
+            dishes={selectedPlace.dishes}
+            selectedDish={selectedDish}
+            setSelectedDish={handleOnDishSelect}
+          />
+        );
       case stepIds.PHOTO:
         return <StepComponent file={file} setFile={setFile} />;
       case stepIds.RATING:
