@@ -1,65 +1,79 @@
 import React from 'react';
-import { styled } from '@mui/material/styles';
-import PropTypes from 'prop-types';
-import Rating from '@mui/material/Rating';
+import { useTheme } from '@mui/material/styles';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import SentimentVeryDissatisfiedIcon from '@mui/icons-material/SentimentVeryDissatisfied';
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import SentimentSatisfiedIcon from '@mui/icons-material/SentimentSatisfied';
 import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAltOutlined';
 import SentimentVerySatisfiedIcon from '@mui/icons-material/SentimentVerySatisfied';
 
-const StyledRating = styled(Rating)(({ theme }) => ({
-  '& .MuiRating-iconEmpty .MuiSvgIcon-root': {
-    color: theme.palette.action.disabled,
-  },
-}));
-
-const customIcons = {
-  1: {
-    icon: <SentimentVeryDissatisfiedIcon color="error" />,
+const customIcons = [
+  {
+    value: 1,
+    color: 'error',
+    icon: SentimentVeryDissatisfiedIcon,
     label: 'Very Dissatisfied',
   },
-  2: {
-    icon: <SentimentDissatisfiedIcon color="error" />,
+  {
+    value: 2,
+    color: 'error',
+    icon: SentimentDissatisfiedIcon,
     label: 'Dissatisfied',
   },
-  3: {
-    icon: <SentimentSatisfiedIcon color="warning" />,
+  {
+    value: 3,
+    color: 'warning',
+    icon: SentimentSatisfiedIcon,
     label: 'Neutral',
   },
-  4: {
-    icon: <SentimentSatisfiedAltIcon color="success" />,
+  {
+    value: 4,
+    color: 'success',
+    icon: SentimentSatisfiedAltIcon,
     label: 'Satisfied',
   },
-  5: {
-    icon: <SentimentVerySatisfiedIcon color="success" />,
+  {
+    value: 5,
+    color: 'success',
+    icon: SentimentVerySatisfiedIcon,
     label: 'Very Satisfied',
   },
-};
+];
 
-function IconContainer(props) {
-  const { value, ...other } = props;
-  return <span {...other}>{customIcons[value].icon}</span>;
-}
-
-IconContainer.propTypes = {
-  value: PropTypes.number.isRequired,
-};
-
-function SentimentalRating({ rating, onRateChange }) {
+function SentimentalRating({ id, rating, onRateChange }) {
+  const theme = useTheme();
   return (
-    <StyledRating
-      name="highlight-selected-only"
-      size="large"
-      onChange={(event, newValue) => {
-        onRateChange(newValue);
-      }}
-      value={rating}
-      defaultValue={0}
-      IconContainerComponent={IconContainer}
-      getLabelText={(value) => customIcons[value].label}
-      highlightSelectedOnly
-    />
+    <Grid container justifyContent="space-around">
+      {customIcons.map((option) => {
+        const { value, color, label, icon: Icon } = option;
+        return (
+          <IconButton
+            id={id}
+            key={value}
+            item
+            aria-label={label}
+            component={Grid}
+            onClick={() => onRateChange(value)}
+            disableRipple={true}
+          >
+            <Icon
+              color={value === rating ? color : ''}
+              sx={{
+                fontSize: 48,
+                transition: theme.transitions.create(['color', 'transform'], {
+                  duration: theme.transitions.duration.standard,
+                }),
+                '&:hover': {
+                  color: theme.palette[color].main,
+                  transform: 'scale(1.3)',
+                },
+              }}
+            />
+          </IconButton>
+        );
+      })}
+    </Grid>
   );
 }
 

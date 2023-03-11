@@ -43,6 +43,7 @@ export default function AddReviewStep({ scores, setScores }) {
               </p>
               <p>{criteriaGroups[currentCategory].criteria[currentCriteria].description}</p>
               <SentimentalRating
+                id={`${criteriaGroups[currentCategory].name}-${criteriaGroups[currentCategory].criteria[currentCriteria].title}`}
                 onRateChange={onRatingSelect}
                 rating={
                   ratings[criteriaGroups[currentCategory].id][
@@ -52,7 +53,9 @@ export default function AddReviewStep({ scores, setScores }) {
               />
             </Grid>
           ) : (
-            <h1>All categories rated</h1>
+            <Grid item>
+              <p>All categories rated</p>
+            </Grid>
           )}
         </Grid>
       </Grid>

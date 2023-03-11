@@ -9,13 +9,22 @@ import { isNil } from '../../validations/is-nil';
 
 import Step from '../steppers/Step';
 import SelectPlaceStep from './add-review-stepper/SelectPlaceStep';
+import SelectDishStep from './add-review-stepper/SelectDishStep';
 import SelectPhotoStep from './add-review-stepper/SelectPhotoStep';
 import AddReviewStep from './add-review-stepper/AddReviewStep';
 
+const stepIds = {
+  PLACE: 'PLACE',
+  DISH: 'DISH',
+  PHOTO: 'PHOTO',
+  RATING: 'RATING',
+};
+
 const steps = [
-  { label: 'Select a place', component: SelectPlaceStep, isOptional: false },
-  { label: 'Upload photos', component: SelectPhotoStep, isOptional: false },
-  { label: 'Set ratings', component: AddReviewStep, isOptional: false },
+  { id: stepIds.PLACE, label: 'Select a place', component: SelectPlaceStep, isOptional: false },
+  { id: stepIds.DISH, label: 'Select dish', component: SelectDishStep, isOptional: false },
+  { id: stepIds.PHOTO, label: 'Upload photos', component: SelectPhotoStep, isOptional: false },
+  { id: stepIds.RATING, label: 'Set ratings', component: AddReviewStep, isOptional: false },
 ];
 
 const defaultScores = {
@@ -44,15 +53,18 @@ export default function AddReviewStepper() {
 
   const isValidStep = useCallback(
     (step) => {
-      switch (step) {
-        case 0:
+      const currentStep = steps[step];
+      switch (currentStep.id) {
+        case stepIds.PLACE:
           return !isNil(selectedPlace);
-        case 1:
+        case stepIds.DISH:
+          return true;
+        case stepIds.PHOTO:
           return !isNil(file);
-        case 2:
+        case stepIds.RATING:
           return scores.isFinished;
         default:
-          return null;
+          return true;
       }
     },
     [selectedPlace, file, scores],
@@ -108,13 +120,17 @@ export default function AddReviewStepper() {
   const getStepperComponent = (step) => {
     const currentStep = steps[step];
     const StepComponent = currentStep.component;
-    switch (step) {
-      case 0:
+    switch (currentStep.id) {
+      case stepIds.PLACE:
         return <StepComponent selectedPlace={selectedPlace} setSelectedPlace={handleOnPlaceSelect} />;
-      case 1:
+      case stepIds.DISH:
+        return <StepComponent />;
+      case stepIds.PHOTO:
         return <StepComponent file={file} setFile={setFile} />;
-      default:
+      case stepIds.RATING:
         return <StepComponent scores={scores} setScores={setScores} />;
+      default:
+        return null;
     }
   };
 
@@ -165,7 +181,6 @@ export default function AddReviewStepper() {
                 Skip
               </Button>
             )}
-
             {activeStep !== steps.length - 1 ? (
               <Button onClick={handleNext} disabled={!isValidStep(activeStep)}>
                 Next
