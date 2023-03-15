@@ -1,4 +1,5 @@
 import React, { useState, useRef, useCallback, useImperativeHandle, forwardRef, useEffect } from 'react';
+import Fuse from 'fuse.js';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MuiAutocomplete from '@mui/material/Autocomplete';
@@ -21,14 +22,28 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
   );
 });
 
-export default function Autocomplete({ items, selectedOption, setSelectedOption, getLabelOption }) {
+const setScore = (value) => (value < 0.1 ? 1 / value : value);
+
+export default function Autocomplete({
+  label,
+  items,
+  searchItemProperties,
+  selectedOption,
+  setSelectedOption,
+  getLabelOption,
+}) {
   const [searchText, setSearchText] = useState(null);
   const [filteredItems, setFilteredItems] = useState(items);
   const debouncedSearchText = useDebounce(searchText, 150);
 
   useEffect(() => {
     if (!isNil(searchText)) {
-      const newItems = items.filter((item) => item.name.toLowerCase().includes(searchText.toLowerCase()));
+      const fuse = new Fuse(items, { includeScore: true, keys: searchItemProperties });
+      const newItems = fuse
+        .search(searchText)
+        .filter((result) => setScore(result.score) >= 0.5)
+        .sort((a, b) => setScore(b.score) - setScore(a.score))
+        .map((result) => result.item);
       setFilteredItems(newItems);
     }
     // eslint-disable-next-line
@@ -48,11 +63,11 @@ export default function Autocomplete({ items, selectedOption, setSelectedOption,
     [setSearchText],
   );
 
-  const handleGetOptionLabel = useCallback((option) => option.name, []);
+  const handleGetOptionLabel = useCallback((option) => `${option.name}`, []);
 
   const handleRenderOption = useCallback(
     (props, option) => (
-      <Box component="li" {...props}>
+      <Box key={option.id} component="li" {...props}>
         {getLabelOption(option)}
       </Box>
     ),
@@ -68,7 +83,7 @@ export default function Autocomplete({ items, selectedOption, setSelectedOption,
     (params) => (
       <TextField
         {...params}
-        label="Choose a place"
+        label={label}
         inputProps={{
           ...params.inputProps,
           autoComplete: 'new-password', // disable autocomplete and autofill
