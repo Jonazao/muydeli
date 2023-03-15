@@ -59,7 +59,7 @@ export default function AddReviewStepper() {
         case stepIds.PLACE:
           return !isNil(selectedPlace);
         case stepIds.DISH:
-          return true;
+          return !isNil(selectedDish);
         case stepIds.PHOTO:
           return !isNil(file);
         case stepIds.RATING:
@@ -68,7 +68,7 @@ export default function AddReviewStepper() {
           return true;
       }
     },
-    [selectedPlace, file, scores],
+    [selectedPlace, selectedDish, file, scores],
   );
 
   const isStepOptional = (step) => {
@@ -82,6 +82,7 @@ export default function AddReviewStepper() {
   const handleFinish = useCallback(async () => {
     const payload = {
       selectedPlace,
+      selectedDish,
       file,
       scores,
     };
@@ -154,6 +155,13 @@ export default function AddReviewStepper() {
     }
     // eslint-disable-next-line
   }, [selectedPlace]);
+
+  useEffect(() => {
+    if (!isNil(selectedDish)) {
+      handleNext();
+    }
+    // eslint-disable-next-line
+  }, [selectedDish]);
 
   return (
     <Box sx={{ width: '100%' }} ref={containerRef}>

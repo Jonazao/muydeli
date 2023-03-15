@@ -1,10 +1,10 @@
-import React, { useState, useRef, useCallback, useImperativeHandle, forwardRef, useEffect } from 'react';
+import React, { useRef, useCallback, useImperativeHandle, forwardRef } from 'react';
 import Fuse from 'fuse.js';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 
-import useDebounce from '../../hooks/useDebounce';
+import { isEmpty } from '../../validations/is-empty';
 import { isNil } from '../../validations/is-nil';
 
 const ListBox = forwardRef(function ListBoxBase(props, ref) {
@@ -31,36 +31,17 @@ export default function Autocomplete({
   selectedOption,
   setSelectedOption,
   getLabelOption,
+  onAddNew,
+  ...rest
 }) {
-  const [searchText, setSearchText] = useState(null);
-  const [filteredItems, setFilteredItems] = useState(items);
-  const debouncedSearchText = useDebounce(searchText, 150);
-
-  useEffect(() => {
-    if (!isNil(searchText)) {
-      const fuse = new Fuse(items, { includeScore: true, keys: searchItemProperties });
-      const newItems = fuse
-        .search(searchText)
-        .filter((result) => setScore(result.score) >= 0.5)
-        .sort((a, b) => setScore(b.score) - setScore(a.score))
-        .map((result) => result.item);
-      setFilteredItems(newItems);
-    }
-    // eslint-disable-next-line
-  }, [debouncedSearchText]);
-
   const handleOnChange = useCallback(
     (e, value) => {
+      if (isNil(value?.id)) {
+        onAddNew();
+      }
       setSelectedOption(value);
     },
-    [setSelectedOption],
-  );
-
-  const handleInputChange = useCallback(
-    (e, newValue) => {
-      setSearchText(newValue);
-    },
-    [setSearchText],
+    [setSelectedOption, onAddNew],
   );
 
   const handleGetOptionLabel = useCallback((option) => `${option.name}`, []);
@@ -90,17 +71,39 @@ export default function Autocomplete({
         }}
       />
     ),
-    [],
+    [label],
   );
 
-  const handleFilterOption = useCallback((x) => x, []);
+  const handleFilterOption = useCallback(
+    (options, params) => {
+      const { inputValue } = params;
+      if (!isEmpty(inputValue)) {
+        const fuse = new Fuse(options, { includeScore: true, keys: searchItemProperties });
+        const newItems = fuse
+          .search(inputValue)
+          .filter((result) => setScore(result.score) >= 0.5)
+          .sort((a, b) => setScore(b.score) - setScore(a.score))
+          .map((result) => result.item);
+        if (newItems.length < 5) {
+          newItems.push({
+            name: 'Add New Dish',
+            type: '',
+            foodType: '',
+          });
+        }
+        return newItems;
+      } else {
+        return options;
+      }
+    },
+    [searchItemProperties],
+  );
 
   return (
     <MuiAutocomplete
       value={selectedOption}
-      options={filteredItems}
+      options={items}
       onChange={handleOnChange}
-      onInputChange={handleInputChange}
       ListboxComponent={ListBox}
       autoHighlight
       getOptionLabel={handleGetOptionLabel}
@@ -108,6 +111,7 @@ export default function Autocomplete({
       isOptionEqualToValue={handleIsOptionEqualToValue}
       renderInput={handleRenderInput}
       filterOptions={handleFilterOption}
+      {...rest}
     />
   );
 }
