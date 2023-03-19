@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import ImageCrop from '../../commons/images/crop/ImageCrop';
 import { Box } from '@mui/material';
-import { useState, useEffect } from 'react';
 import ImageContainer from '../../commons/images/ImageContainer';
 import aspectRatios from '../../../constants/images/aspect-ratios';
 import imagePlaceHolder from '../../../assets/image-place-holder.jpg';
