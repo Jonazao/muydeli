@@ -20,7 +20,7 @@ export default function Dishes() {
         onClose: closeModal,
         title: 'Add dish review',
       },
-      content: <AddReviewModal />,
+      content: <AddReviewModal handleModalClose={closeModal} />,
     });
   }, [openModal, closeModal]);
 

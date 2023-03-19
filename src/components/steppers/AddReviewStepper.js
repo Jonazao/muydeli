@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import MuiStep from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+
 import { isNil } from '../../validations/is-nil';
 
 import Step from '../steppers/Step';
@@ -12,6 +14,10 @@ import SelectPlaceStep from './add-review-stepper/SelectPlaceStep';
 import SelectDishStep from './add-review-stepper/SelectDishStep';
 import SelectPhotoStep from './add-review-stepper/SelectPhotoStep';
 import AddReviewStep from './add-review-stepper/AddReviewStep';
+
+import { HOME_URL } from '../../config/configureRoutes';
+
+import { useCreateReviewMutation } from '../../services/review';
 
 const stepIds = {
   PLACE: 'PLACE',
@@ -43,8 +49,10 @@ const defaultScores = {
   },
 };
 
-export default function AddReviewStepper() {
+export default function AddReviewStepper({ handleModalClose }) {
   const containerRef = useRef(null);
+  const navigate = useNavigate();
+  const [createReview] = useCreateReviewMutation();
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [selectedPlace, setSelectedPlace] = useState(null);
@@ -86,8 +94,10 @@ export default function AddReviewStepper() {
       file,
       scores,
     };
-    console.log(payload);
-  }, [selectedPlace, file, scores]);
+    await createReview(payload);
+    handleModalClose();
+    navigate(HOME_URL);
+  }, [selectedPlace, selectedDish, file, scores, createReview, handleModalClose, navigate]);
 
   const handleBack = useCallback(() => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);

@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker';
 
 const createDish = (id) => {
   return {
-    id: id,
+    id: id + 1,
     name: faker.commerce.product(),
     type: faker.commerce.productMaterial(),
     foodType: faker.commerce.productMaterial(),

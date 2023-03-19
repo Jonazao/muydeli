@@ -16,10 +16,6 @@ export default function CreateDish({ handleClose, handleAdd }) {
     type: '',
     category: '',
   });
-  console.log(dialogValue);
-  console.log(isEmpty(dialogValue.name));
-  console.log(isEmpty(dialogValue.type));
-  console.log(isEmpty(dialogValue.category));
   return (
     <>
       <DialogTitle>Add a new dish</DialogTitle>

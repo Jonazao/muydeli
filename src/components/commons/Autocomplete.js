@@ -24,16 +24,17 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
 
 const setScore = (value) => (value < 0.1 ? 1 / value : value);
 
-export default function Autocomplete({
+function Autocomplete({
   label,
   items,
   searchItemProperties,
   selectedOption,
   setSelectedOption,
   getLabelOption,
-  onAddNew,
+  addNew,
   ...rest
 }) {
+  const { onAdd: onAddNew, element: newElement } = addNew;
   const handleOnChange = useCallback(
     (e, value) => {
       if (isNil(value?.id)) {
@@ -81,22 +82,18 @@ export default function Autocomplete({
         const fuse = new Fuse(options, { includeScore: true, keys: searchItemProperties });
         const newItems = fuse
           .search(inputValue)
-          .filter((result) => setScore(result.score) >= 0.5)
+          .filter((result) => setScore(result.score) > 0.6)
           .sort((a, b) => setScore(b.score) - setScore(a.score))
           .map((result) => result.item);
-        if (newItems.length < 5) {
-          newItems.push({
-            name: 'Add New Dish',
-            type: '',
-            foodType: '',
-          });
+        if (newItems.length === 0) {
+          newItems.push(newElement);
         }
         return newItems;
       } else {
         return options;
       }
     },
-    [searchItemProperties],
+    [searchItemProperties, newElement],
   );
 
   return (
@@ -115,3 +112,9 @@ export default function Autocomplete({
     />
   );
 }
+
+Autocomplete.defaultProps = {
+  addNew: {},
+};
+
+export default Autocomplete;

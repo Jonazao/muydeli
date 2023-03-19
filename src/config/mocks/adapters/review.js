@@ -1,7 +1,4 @@
-import {
-  createPaginationResponse,
-  extractIdPathParamFromUrl,
-} from '../common/helpers';
+import { createPaginationResponse, extractIdPathParamFromUrl } from '../common/helpers';
 import reviews from '../data/reviews';
 
 const getReview = (config) => {
@@ -24,10 +21,15 @@ const getReviews = (config) => {
   return [200, paginationResult];
 };
 
+const createReview = (config) => {
+  return [200, null];
+};
+
 const init = (mockAdapter) => {
   // Review Resource
   mockAdapter.onGet(/\/reviews\/\d+/).reply((config) => getReview(config));
   mockAdapter.onGet(/reviews/).reply((config) => getReviews(config));
+  mockAdapter.onPost(/reviews/).reply((config) => createReview(config));
 };
 
 const adapter = {

@@ -23,7 +23,17 @@ export const reviewApi = createApi({
           : reviewTags.getListTagList();
       },
     }),
+    createReview: build.mutation({
+      query: (data) => {
+        return {
+          url: resourceName,
+          method: 'POST',
+          data,
+        };
+      },
+      invalidatesTags: reviewTags.getListTagList(),
+    }),
   }),
 });
 
-export const { useGetReviewQuery, useGetReviewsQuery } = reviewApi;
+export const { useGetReviewQuery, useGetReviewsQuery, useCreateReviewMutation } = reviewApi;

@@ -22,9 +22,17 @@ export default function SelectDishStep({ dishes, selectedDish, setSelectedDish }
       setSelectedDish(autoCompleteSelectedOption);
     }
   }, [setSelectedDish, autoCompleteSelectedOption]);
-  const getLabelOption = ({ name, type, foodType }) =>
-    `${name}${type ? ` - ${type}` : ''}${foodType ? ` - ${foodType}` : ''}`;
+  const getLabelOption = ({ name }) => name;
   const getGroups = ({ type }) => type;
+  const sortedDishes = [...dishes].sort((a, b) => {
+    const textA = a.type.toUpperCase();
+    const textB = b.type.toUpperCase();
+    if (textA < textB) {
+      return -1;
+    }
+    return textA > textB ? 1 : 0;
+  });
+
   return (
     <Grid container spacing={2} flexDirection="column" alignItems="flex-start">
       <Grid item xs={12} sx={{ width: '100%' }} alignSelf="center">
@@ -33,10 +41,17 @@ export default function SelectDishStep({ dishes, selectedDish, setSelectedDish }
           selectedOption={autoCompleteSelectedOption}
           setSelectedOption={setAutoCompleteSelectedOption}
           getLabelOption={getLabelOption}
-          items={dishes}
-          searchItemProperties={['name', 'type', 'foodType']}
+          items={sortedDishes}
+          searchItemProperties={['name']}
           groupBy={getGroups}
-          onAddNew={toggle}
+          addNew={{
+            onAdd: toggle,
+            element: {
+              name: 'Add New Dish',
+              type: 'Action',
+              foodType: '',
+            },
+          }}
         />
       </Grid>
       {autoCompleteSelectedOption && (
