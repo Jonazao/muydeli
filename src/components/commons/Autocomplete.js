@@ -1,10 +1,11 @@
-import React, { useState, useRef, useCallback, useImperativeHandle, forwardRef, useEffect } from 'react';
+import React, { useRef, useCallback, useImperativeHandle, forwardRef } from 'react';
+import Fuse from 'fuse.js';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import MuiAutocomplete from '@mui/material/Autocomplete';
 
-import useInfiniteLoading from '../../hooks/useInfiniteLoading';
-import useDebounce from '../../hooks/useDebounce';
+import { isEmpty } from '../../validations/is-empty';
+import { isNil } from '../../validations/is-nil';
 
 const ListBox = forwardRef(function ListBoxBase(props, ref) {
   const { children, ...rest } = props;
@@ -21,64 +22,38 @@ const ListBox = forwardRef(function ListBoxBase(props, ref) {
   );
 });
 
-export default function LazyAutocomplete({
-  lazyFetchFunction,
-  fetchFunctionParams,
+const setScore = (value) => (value < 0.1 ? 1 / value : value);
+
+function Autocomplete({
+  label,
+  items,
+  searchItemProperties,
   selectedOption,
   setSelectedOption,
+  getLabelOption,
+  addNew,
+  ...rest
 }) {
-  const [searchText, setSearchText] = useState(null);
-  const debouncedSearchText = useDebounce(searchText, 500);
-  const [getItem] = lazyFetchFunction();
-  const { items, loadInitialItems, hasNext, loadNext } = useInfiniteLoading({
-    fetchItems: (params) =>
-      getItem({ ...fetchFunctionParams, params: { ...params, searchText: debouncedSearchText } }),
-    fetchOnInit: false,
-  });
-
-  useEffect(() => {
-    loadInitialItems();
-    // eslint-disable-next-line
-  }, [debouncedSearchText]);
-
-  const loadMoreResults = () => {
-    if (hasNext) {
-      loadNext();
-    }
-  };
-
-  const handleScroll = (event) => {
-    const listBoxNode = event.currentTarget;
-
-    const position = listBoxNode.scrollTop + listBoxNode.clientHeight;
-    if (listBoxNode.scrollHeight - position <= 1) {
-      loadMoreResults();
-    }
-  };
-
+  const { onAdd: onAddNew, element: newElement } = addNew;
   const handleOnChange = useCallback(
     (e, value) => {
+      if (isNil(value?.id)) {
+        onAddNew();
+      }
       setSelectedOption(value);
     },
-    [setSelectedOption],
+    [setSelectedOption, onAddNew],
   );
 
-  const handleInputChange = useCallback(
-    (e, newValue) => {
-      setSearchText(newValue);
-    },
-    [setSearchText],
-  );
-
-  const handleGetOptionLabel = useCallback((option) => option.name, []);
+  const handleGetOptionLabel = useCallback((option) => `${option.name}`, []);
 
   const handleRenderOption = useCallback(
     (props, option) => (
-      <Box component="li" {...props}>
-        {option.name} - ({option.address.addressLine})
+      <Box key={option.id} component="li" {...props}>
+        {getLabelOption(option)}
       </Box>
     ),
-    [],
+    [getLabelOption],
   );
 
   const handleIsOptionEqualToValue = useCallback(
@@ -90,34 +65,56 @@ export default function LazyAutocomplete({
     (params) => (
       <TextField
         {...params}
-        label="Choose a place"
+        label={label}
         inputProps={{
           ...params.inputProps,
           autoComplete: 'new-password', // disable autocomplete and autofill
         }}
       />
     ),
-    [],
+    [label],
   );
 
-  const handleFilterOption = useCallback((x) => x, []);
+  const handleFilterOption = useCallback(
+    (options, params) => {
+      const { inputValue } = params;
+      if (!isEmpty(inputValue)) {
+        const fuse = new Fuse(options, { includeScore: true, keys: searchItemProperties });
+        const newItems = fuse
+          .search(inputValue)
+          .filter((result) => setScore(result.score) > 0.6)
+          .sort((a, b) => setScore(b.score) - setScore(a.score))
+          .map((result) => result.item);
+        if (newItems.length === 0) {
+          newItems.push(newElement);
+        }
+        return newItems;
+      } else {
+        return options;
+      }
+    },
+    [searchItemProperties, newElement],
+  );
 
   return (
     <MuiAutocomplete
       value={selectedOption}
       options={items}
       onChange={handleOnChange}
-      onInputChange={handleInputChange}
       ListboxComponent={ListBox}
       autoHighlight
       getOptionLabel={handleGetOptionLabel}
       renderOption={handleRenderOption}
       isOptionEqualToValue={handleIsOptionEqualToValue}
       renderInput={handleRenderInput}
-      ListboxProps={{
-        onScroll: handleScroll,
-      }}
       filterOptions={handleFilterOption}
+      {...rest}
     />
   );
 }
+
+Autocomplete.defaultProps = {
+  addNew: {},
+};
+
+export default Autocomplete;

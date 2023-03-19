@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+import dishes from './dishes';
 
 const createPlace = (id) => {
   const lat = 31.85 + 1 / faker.datatype.number({ min: 20, max: 50 });
@@ -31,6 +32,7 @@ const places = Array.from({ length: 35 }).map((item, index) => {
     priceRange: faker.datatype.number({ min: 1, max: 4 }),
     numberOfReviews: faker.datatype.number({ min: 0, max: 12 }),
     mostReviewedDish: faker.commerce.productName(),
+    dishes: dishes,
   };
 });
 

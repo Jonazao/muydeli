@@ -1,41 +1,82 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import MuiStep from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+
 import { isNil } from '../../validations/is-nil';
 
 import Step from '../steppers/Step';
 import SelectPlaceStep from './add-review-stepper/SelectPlaceStep';
+import SelectDishStep from './add-review-stepper/SelectDishStep';
+import SelectPhotoStep from './add-review-stepper/SelectPhotoStep';
+import AddReviewStep from './add-review-stepper/AddReviewStep';
+
+import { HOME_URL } from '../../config/configureRoutes';
+
+import { useCreateReviewMutation } from '../../services/review';
+
+const stepIds = {
+  PLACE: 'PLACE',
+  DISH: 'DISH',
+  PHOTO: 'PHOTO',
+  RATING: 'RATING',
+};
 
 const steps = [
-  { label: 'Select a place', component: SelectPlaceStep, isOptional: false },
-  { label: 'Upload photos', component: () => <h1>Step 2</h1>, isOptional: false },
-  { label: 'Set ratings', component: () => <h1>Step 3</h1>, isOptional: false },
+  { id: stepIds.PLACE, label: 'Select a place', component: SelectPlaceStep, isOptional: false },
+  { id: stepIds.DISH, label: 'Select dish', component: SelectDishStep, isOptional: false },
+  { id: stepIds.PHOTO, label: 'Upload photos', component: SelectPhotoStep, isOptional: false },
+  { id: stepIds.RATING, label: 'Set ratings', component: AddReviewStep, isOptional: false },
 ];
 
-export default function AddReviewStepper() {
+const defaultScores = {
+  isFinished: false,
+  taste: {
+    expectation: null,
+    flavor: null,
+  },
+  presentation: {
+    firstImpression: null,
+    plating: null,
+  },
+  quantity: {
+    satietyLevel: null,
+    garnishes: null,
+  },
+};
+
+export default function AddReviewStepper({ handleModalClose }) {
   const containerRef = useRef(null);
+  const navigate = useNavigate();
+  const [createReview] = useCreateReviewMutation();
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
   const [selectedPlace, setSelectedPlace] = useState(null);
+  const [selectedDish, setSelectedDish] = useState(null);
+  const [file, setFile] = useState(null);
+  const [scores, setScores] = useState(defaultScores);
 
   const isValidStep = useCallback(
     (step) => {
-      switch (step) {
-        case 0:
+      const currentStep = steps[step];
+      switch (currentStep.id) {
+        case stepIds.PLACE:
           return !isNil(selectedPlace);
-        case 1:
-          return true;
-        case 2:
-          return true;
+        case stepIds.DISH:
+          return !isNil(selectedDish);
+        case stepIds.PHOTO:
+          return !isNil(file);
+        case stepIds.RATING:
+          return scores.isFinished;
         default:
-          return null;
+          return true;
       }
     },
-    [selectedPlace],
+    [selectedPlace, selectedDish, file, scores],
   );
 
   const isStepOptional = (step) => {
@@ -47,8 +88,16 @@ export default function AddReviewStepper() {
   };
 
   const handleFinish = useCallback(async () => {
-    console.log('Done');
-  }, []);
+    const payload = {
+      selectedPlace,
+      selectedDish,
+      file,
+      scores,
+    };
+    await createReview(payload);
+    handleModalClose();
+    navigate(HOME_URL);
+  }, [selectedPlace, selectedDish, file, scores, createReview, handleModalClose, navigate]);
 
   const handleBack = useCallback(() => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -80,16 +129,33 @@ export default function AddReviewStepper() {
     [setSelectedPlace],
   );
 
+  const handleOnDishSelect = useCallback(
+    (dish) => {
+      setSelectedDish(dish);
+    },
+    [setSelectedDish],
+  );
+
   const getStepperComponent = (step) => {
     const currentStep = steps[step];
     const StepComponent = currentStep.component;
-    switch (step) {
-      case 0:
+    switch (currentStep.id) {
+      case stepIds.PLACE:
         return <StepComponent selectedPlace={selectedPlace} setSelectedPlace={handleOnPlaceSelect} />;
-      case 1:
-        return StepComponent && <StepComponent />;
+      case stepIds.DISH:
+        return (
+          <StepComponent
+            dishes={selectedPlace.dishes}
+            selectedDish={selectedDish}
+            setSelectedDish={handleOnDishSelect}
+          />
+        );
+      case stepIds.PHOTO:
+        return <StepComponent file={file} setFile={setFile} />;
+      case stepIds.RATING:
+        return <StepComponent scores={scores} setScores={setScores} />;
       default:
-        return StepComponent && <StepComponent />;
+        return null;
     }
   };
 
@@ -99,6 +165,13 @@ export default function AddReviewStepper() {
     }
     // eslint-disable-next-line
   }, [selectedPlace]);
+
+  useEffect(() => {
+    if (!isNil(selectedDish)) {
+      handleNext();
+    }
+    // eslint-disable-next-line
+  }, [selectedDish]);
 
   return (
     <Box sx={{ width: '100%' }} ref={containerRef}>
@@ -140,7 +213,6 @@ export default function AddReviewStepper() {
                 Skip
               </Button>
             )}
-
             {activeStep !== steps.length - 1 ? (
               <Button onClick={handleNext} disabled={!isValidStep(activeStep)}>
                 Next
